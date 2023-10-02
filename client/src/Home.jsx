@@ -40,7 +40,7 @@ function Home() {
           </div>
           :
           <div>
-            <h3>Login Now</h3>
+            <h3>Login Here</h3>
             <Link to="/login" className='btn btn-primary m-3'>Login</Link>
             <Link to="/register" className='btn btn-primary'>Register</Link>
           </div>
