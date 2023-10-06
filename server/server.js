@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import db_connections from "./db/init.js";
 import userRoutes from "./routes/user.routes.js";
 import opportunityRoutes from "./routes/opportunity.routes.js";
-import projectBudgetRoutes from "./routes/projectBudget.routes.js";
+import companyRoutes from "./routes/company.routes.js";
 
 import "dotenv/config";
 
@@ -29,7 +29,7 @@ db_connections
 
 app.use("/users", userRoutes);
 app.use("/opportunities", opportunityRoutes);
-app.use("/projectBudgets", projectBudgetRoutes);
+app.use("/companies", companyRoutes);
 
 app.listen(8081, () => {
   console.log("Running...");

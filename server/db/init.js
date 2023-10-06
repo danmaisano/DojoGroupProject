@@ -21,6 +21,7 @@ const db_connections = new Sequelize(
     },
   }
 );
+
 const executeSqlScripts = async () => {
   const sqlFolderPath = path.resolve("../server/SQL_scripts");
   const sqlFiles = fs.readdirSync(sqlFolderPath);
