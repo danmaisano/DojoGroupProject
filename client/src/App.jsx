@@ -5,8 +5,7 @@ import Register from './Register'
 import Login from './Login'
 import NewOpportunityForm from './NewOpp'
 import OppDashboard from './OppDashboard'
-import ProjectBudgetDashboard from './ProjectBudgetDashboard';
-import NewProjectBudgetForm from './NewProjectBudgetForm';
+
 
 
 function App() {
@@ -19,8 +18,7 @@ function App() {
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/opportunities' element={<OppDashboard/>}></Route>
         <Route path='/newOpp' element={<NewOpportunityForm/>}></Route>
-        <Route path='/projectBudgets' element={<ProjectBudgetDashboard />} /> 
-        <Route path='/newProjectBudget' element={<NewProjectBudgetForm />} /> 
+
 
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
-import User from "../models/user.js";
+import User from "../models//user.js";
+import Company from "../models//company.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -21,11 +22,26 @@ const userController = {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
+      // Check if company exists
+      let company = await Company.findOne({
+        where: {
+          company_name: req.body.company,
+        },
+      });
+
+      if (!company) {
+        company = await Company.create({
+          company_name: req.body.company,
+        });
+      }
+
+      // Create a new user and associate it with the company
       const newUser = await User.create({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
         password: hashedPassword,
+        company_id: company.id,
       });
 
       const token = jwt.sign(

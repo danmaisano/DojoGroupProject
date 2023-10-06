@@ -36,6 +36,14 @@ User.init(
         notEmpty: true,
       },
     },
+    company_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Company",
+        key: "id",
+      },
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,

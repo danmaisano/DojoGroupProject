@@ -8,6 +8,7 @@ const Register = () => {
         first_name: '',
         last_name: '',
         email: '',
+        company: '',
         password: '',
         confirm_password: '',
     });
@@ -61,6 +62,15 @@ const Register = () => {
                                 We'll never share your email with anyone else.
                             </Form.Text>
                         </Form.Group>
+
+                        <Form.Group controlId="formCompany">
+                            <Form.Label>Company Name</Form.Label>
+                            <Form.Control type="company" placeholder="Enter Company" name="company" value={formData.company} onChange={handleChange} />
+                            <Form.Text className="text-muted">
+                                What company are you a part of?
+                            </Form.Text>
+                        </Form.Group>
+
 
                         <Form.Group controlId="formPassword">
                             <Form.Label>Password</Form.Label>
