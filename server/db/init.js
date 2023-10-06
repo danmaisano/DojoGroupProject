@@ -26,17 +26,38 @@ const executeSqlScripts = async () => {
   const sqlFolderPath = path.resolve("../server/SQL_scripts");
   const sqlFiles = fs.readdirSync(sqlFolderPath);
 
-  for (const file of sqlFiles) {
-    const filePath = path.join(sqlFolderPath, file);
-    const sql = fs.readFileSync(filePath, "utf-8");
+  // First, execute CompanyTable.sql
+  const companyTablePath = path.join(sqlFolderPath, "CompanyTable.sql");
+  if (fs.existsSync(companyTablePath)) {
+    const sql = fs.readFileSync(companyTablePath, "utf-8");
     await db_connections
       .query(sql)
       .then(() => {
-        console.log(`Executed SQL script ${file}`);
+        console.log(`Executed SQL script CompanyTable.sql`);
       })
       .catch((err) => {
-        console.error(`Error while executing SQL script ${file}:`, err);
+        console.error(
+          `Error while executing SQL script CompanyTable.sql:`,
+          err
+        );
       });
+  }
+
+  // Then, execute the rest of the SQL files
+  for (const file of sqlFiles) {
+    if (file !== "CompanyTable.sql") {
+      // Skip CompanyTable.sql since it's already executed
+      const filePath = path.join(sqlFolderPath, file);
+      const sql = fs.readFileSync(filePath, "utf-8");
+      await db_connections
+        .query(sql)
+        .then(() => {
+          console.log(`Executed SQL script ${file}`);
+        })
+        .catch((err) => {
+          console.error(`Error while executing SQL script ${file}:`, err);
+        });
+    }
   }
 };
 

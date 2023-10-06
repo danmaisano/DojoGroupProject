@@ -50,6 +50,8 @@ const userController = {
           first_name: newUser.first_name,
           last_name: newUser.last_name,
           email: newUser.email,
+          company: newUser.company,
+          token: token,
         },
         JWT_SECRET,
         { expiresIn: "1h" }
