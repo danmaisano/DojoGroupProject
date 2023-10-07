@@ -1,12 +1,15 @@
-  import React, { useState } from 'react';
+  import { useState } from 'react';
   import { Button, Form, Container, Row, Col } from 'react-bootstrap';
   import { useNavigate } from 'react-router-dom';
   import axios from 'axios';
+  import Cookies from "js-cookie";
+  import loginUser from './components/loginUser';
+  
 
-  const Login = () => {
-
+  const Login = (props) => {
+    const {user, setUser} = props;
+    const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
-    axios.defaults.withCredentials = true;
 
     const [formData, setFormData] = useState({
       email: '',
@@ -21,26 +24,18 @@
       }));
     };
 
-    const handleSubmit = (e) => {
+    const handleLogin = (e) => {
       e.preventDefault();
-      console.log(formData);
-      axios.post('http://localhost:8081/users/login', formData)
-        .then(res => {
-          if (res.data.Status === "Success") {
-            navigate('/')
-          } else {
-            alert(res.data.error)
-          }
-        })
-        .catch(err => console.log(err))
+      loginUser(formData.email, formData.password, setUser, navigate);
     };
+    
 
     return (
       <Container>
         <Row className="justify-content-md-center">
           <Col md={6}>
             <h2>Login</h2>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleLogin}>
               <Form.Group controlId="formEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" name="email" value={formData.email} onChange={handleChange} />

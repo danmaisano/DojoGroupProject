@@ -44,6 +44,11 @@ User.init(
       },
       allowNull: true,
     },
+    role: {
+      type: DataTypes.ENUM("admin", "user"),
+      allowNull: false,
+      defaultValue: "user",
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,

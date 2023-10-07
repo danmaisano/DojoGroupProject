@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import loginUser from './components/loginUser';
 
-const Register = () => {
+const Register = (props) => {
+    const {user, setUser} = props;
+
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -13,9 +16,6 @@ const Register = () => {
         confirm_password: '',
     });
     const navigate = useNavigate();
-		axios.defaults.withCredentials = true;
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,26 +25,24 @@ const Register = () => {
         }));
     };
 
-		const handleSubmit = (e) => {
-			e.preventDefault();
-			axios.post('http://localhost:8081/users/register', formData)
-				.then(res => {
-					console.log(res);
-						console.log("success")
-						navigate('/');
-				})
-				.catch(err => console.log(err));
-		};
+	const handleRegister = (e) => {
+        e.preventDefault();
+        axios.post('http://localhost:8081/users/register', formData)
+          .then(res => {
+            console.log(res);
+            console.log("Registration successful");
+            loginUser(formData.email, formData.password, setUser, navigate);
+          })
+          .catch(err => console.log(err));
+      };
 		
-    
-    
 
     return (
         <Container>
             <Row className="justify-content-md-center">
                 <Col md={6}>
                     <h2>Register</h2>
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleRegister}>
                         <Form.Group controlId="formFirstName">
                             <Form.Label>First Name</Form.Label>
                             <Form.Control type="text" placeholder="Enter First Name" name="first_name" value={formData.first_name} onChange={handleChange} />

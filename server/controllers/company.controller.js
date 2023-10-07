@@ -13,17 +13,12 @@ const companyController = {
     }
   },
 
-  // Add a new company
   addCompany: async (req, res) => {
     try {
       const company = await Company.create({
         company_name: req.body.company_name,
       });
-      return res.json({
-        Status: "Success",
-        message: "Company added successfully",
-        company,
-      });
+        
     } catch (error) {
       console.error("Error occurred while adding company:", error);
       return res.status(500).json({ Status: "Failed to add company" });
@@ -56,6 +51,13 @@ const companyController = {
       if (!company) {
         return res.status(404).json({ Status: "Company not found" });
       }
+  
+      // Ensure the user is an admin for the company they're trying to modify
+      const user = await User.findByPk(req.user.id);
+      if (user.company_id !== company.id || user.role !== "admin") {
+        return res.status(403).json({ Status: "Access denied" });
+      }
+  
       company.company_name = req.body.company_name || company.company_name;
       await company.save();
       return res.json({
@@ -77,6 +79,10 @@ const companyController = {
       });
       if (!company) {
         return res.status(404).json({ Status: "Company not found" });
+      }
+      const user = await User.findByPk(req.user.id);
+      if (user.company_id !== company.id || user.role !== "admin") {
+        return res.status(403).json({ Status: "Access denied" });
       }
       await company.destroy();
       return res.json({ Status: "Success", message: "Company deleted" });

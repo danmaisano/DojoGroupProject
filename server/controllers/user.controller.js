@@ -28,13 +28,17 @@ const userController = {
           company_name: req.body.company,
         },
       });
-
+      
+      let role;
       if (!company) {
         company = await Company.create({
           company_name: req.body.company,
         });
+        role = "admin"; // Newly created company, so this user is an admin
+      } else {
+        role = "member"; // Company already exists, so this user is a member (or whatever default role you prefer)
       }
-
+      
       // Create a new user and associate it with the company
       const newUser = await User.create({
         first_name: req.body.first_name,
@@ -42,6 +46,7 @@ const userController = {
         email: req.body.email,
         password: hashedPassword,
         company_id: company.id,
+        role: role, 
       });
 
       const token = jwt.sign(
@@ -51,7 +56,7 @@ const userController = {
           last_name: newUser.last_name,
           email: newUser.email,
           company: newUser.company,
-          token: token,
+          role: newUser.role,
         },
         JWT_SECRET,
         { expiresIn: "1h" }
@@ -92,12 +97,14 @@ const userController = {
           first_name: user.first_name,
           last_name: user.last_name,
           email: user.email,
+          company: user.company,
+          role: user.role,
         },
         JWT_SECRET,
         { expiresIn: "1h" }
       );
 
-      res.cookie("token", token);
+      res.cookie("token", token, { httpOnly: true });
       return res.json({ Status: "Success", token });
     } catch (error) {
       console.error("Error occurred during login:", error);
