@@ -21,11 +21,12 @@ const loginUser = (email, password, setUser, navigate) => {
         company: decodedToken.company,
         role: decodedToken.role,
       });
+      // console.log(userData) 
 
       Cookies.set("userData", JSON.stringify(userData), { expires: 30 });
       setUser(userData);
 
-      navigate("/opportunities");
+      navigate("/dashboard");
     })
     .catch((err) => {
       console.error("Login failed", err);

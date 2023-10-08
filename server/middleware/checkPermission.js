@@ -2,7 +2,13 @@ import ac from '../middleware/ac.js';
 
 const checkPermission = (action, resource) => {
   return (req, res, next) => {
-    const userRole = req.user.role; // Assuming the user's role is on the request object
+    // console.log('Checking permissions for:', req.user); 
+    
+    const userRole = req.user ? req.user.role : null;
+    if(!userRole) {
+        return res.status(401).send('Unauthorized');
+    }
+
     const permission = ac.can(userRole)[action](resource);
 
     if (permission.granted) {
@@ -13,4 +19,4 @@ const checkPermission = (action, resource) => {
   };
 };
 
-export default checkPermission;
+export default checkPermission; 

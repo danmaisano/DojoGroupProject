@@ -18,6 +18,32 @@ const userController = {
     }
   },
 
+  getAllUsersByCompany: async (req, res) => {
+    try {
+      const { company_id } = req.params;
+
+      // Check if company exists
+      const company = await Company.findByPk(company_id);
+
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+
+      // Fetch all users with the specified company_id
+      const users = await User.findAll({
+        where: {
+          company_id: company_id
+        },
+        attributes: ['id','first_name', 'last_name', 'email', 'role'], // Select only the desired attributes
+      });
+
+      return res.json({ users });
+    } catch (error) {
+      console.error("Error occurred while fetching users:", error);
+      return res.status(500).json({ error: "Failed to fetch users" });
+    }
+  },
+
   register: async (req, res) => {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -36,7 +62,7 @@ const userController = {
         });
         role = "admin"; // Newly created company, so this user is an admin
       } else {
-        role = "member"; // Company already exists, so this user is a member (or whatever default role you prefer)
+        role = "user"; // Company already exists, so this user is a member (or whatever default role you prefer)
       }
       
       // Create a new user and associate it with the company
@@ -55,7 +81,7 @@ const userController = {
           first_name: newUser.first_name,
           last_name: newUser.last_name,
           email: newUser.email,
-          company: newUser.company,
+          company: newUser.company_id,
           role: newUser.role,
         },
         JWT_SECRET,
@@ -97,7 +123,7 @@ const userController = {
           first_name: user.first_name,
           last_name: user.last_name,
           email: user.email,
-          company: user.company,
+          company: user.company_id,
           role: user.role,
         },
         JWT_SECRET,
@@ -116,6 +142,54 @@ const userController = {
     res.clearCookie("token");
     return res.json({ Status: "Success" });
   },
+
+  updateUser: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const { id, first_name, last_name, email, role } = req.body;
+  
+      // Find the user by ID
+      const user = await User.findByPk(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Conditionally update user details
+      if (id) user.id = id;
+      if (first_name) user.first_name = first_name;
+      if (last_name) user.last_name = last_name;
+      if (email) user.email = email;
+      if (role) user.role = role;
+  
+      await user.save();
+  
+      return res.json({ message: "User updated successfully", user });
+    } catch (error) {
+      console.error("Error occurred during user update:", error);
+      return res.status(500).json({ error: "Failed to update user" });
+    }
+},
+
+  
+  deleteUser: async (req, res) => {
+    try {
+      const userId = req.params.id;
+  
+      // Find the user by ID and delete
+      const result = await User.destroy({ where: { id: userId } });
+  
+      if (result === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      return res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error occurred during user deletion:", error);
+      return res.status(500).json({ error: "Failed to delete user" });
+    }
+  }
+
 };
 
 export default userController;

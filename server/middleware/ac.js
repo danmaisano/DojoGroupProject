@@ -7,16 +7,19 @@ ac.grant('user')
   .readOwn('company');   // Can read the company they belong to
 
 ac.grant('admin')
-  .extend('user')       // Inherits user permissions
-  .updateOwn('company') // Can update their own company
-  .deleteOwn('company'); // Can delete their own company
+  .extend('user')        // Inherits user permissions
+  .updateOwn('company')  // Can update their own company
+  .deleteOwn('company')  // Can delete their own company
+  .createAny('user')     // Can create a user (potentially an admin) within their company
+  .updateAny('user')    // Can update a user within their company
+  .readAny('company');
 
-  ac.grant('superAdmin')
+ac.grant('superAdmin')
   .createAny('company')
   .readAny('company')
   .updateAny('company')
   .deleteAny('company')
-  // ... Add permissions for other resources similarly
-
+  .updateAny('user')
+  .createAny('user');
 
 export default ac;

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect   } from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import NewOpportunityForm from './NewOpp'
-import OppDashboard from './OppDashboard'
+import Dashboard from './Dashboard'
 import Cookies from 'js-cookie'
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
         <Route path='/' element={<Home user={user} setUser={setUser}/>}></Route>
         <Route path='/register' element={<Register user={user} setUser={setUser}/>}></Route>
         <Route path='/login' element={<Login user={user} setUser={setUser}/>}></Route>
-        <Route path='/opportunities' element={<OppDashboard user={user} setUser={setUser}/>}></Route>
+        <Route path='/dashboard' element={<Dashboard user={user} setUser={setUser}/>}></Route>
         <Route path='/newOpp' element={<NewOpportunityForm user={user} setUser={setUser}/>}></Route>
       </Routes>
     </BrowserRouter>
