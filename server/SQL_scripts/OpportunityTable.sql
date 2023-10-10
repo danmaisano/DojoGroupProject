@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS
         pot_rev INTEGER,
         chance_of_winning INTEGER,
         status VARCHAR(255),
+        company_id INTEGER REFERENCES "companies"(id),
         opportunity_win_date DATE,
         start_date DATE,
         end_date DATE,

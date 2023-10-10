@@ -12,19 +12,22 @@ function Dashboard(props) {
 
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8081/opportunities/")
-      .then((res) => {
-        setOpportunities(res.data.opportunities);
-      })
-      .catch((err) => console.log(err));
-    if (user.company && user.role === "admin") {
+    if (user && user.company) {
       axios
-        .get(`http://localhost:8081/users/company/${user.company}`, { withCredentials: true })
+        .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
         .then((res) => {
-          setUsers(res.data.users);
+          setOpportunities(res.data.opportunities);
         })
         .catch((err) => console.log(err));
+      
+      if (user.role === "admin") {
+        axios
+          .get(`http://localhost:8081/users/company/${user.company}`, { withCredentials: true })
+          .then((res) => {
+            setUsers(res.data.users);
+          })
+          .catch((err) => console.log(err));
+      }
     }
   }, [user]);
 
@@ -112,7 +115,7 @@ function Dashboard(props) {
           withCredentials: true 
         }
       )
-      .then(() => {
+      .then(() => { 
         setUsers(
           users.map((u) =>
             u.id === id ? { ...u, [field]: userToUpdate[field] } : u

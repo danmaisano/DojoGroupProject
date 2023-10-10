@@ -4,7 +4,11 @@ const ac = new AccessControl();
 
 ac.grant('user')
   .createOwn('company')  // Can create a company (and automatically becomes its admin)
-  .readOwn('company');   // Can read the company they belong to
+  .readOwn('company')   // Can read the company they belong to
+  .createOwn('opportunity')
+  .readAny('opportunity')
+  .updateAny('opportunity')
+  .deleteOwn('opportunity')
 
 ac.grant('admin')
   .extend('user')        // Inherits user permissions
@@ -12,9 +16,10 @@ ac.grant('admin')
   .deleteOwn('company')  // Can delete their own company
   .createAny('user')     // Can create a user (potentially an admin) within their company
   .updateAny('user')    // Can update a user within their company
-  .readAny('company');
+  .readAny('company'); // Can read any information within their company
 
 ac.grant('superAdmin')
+  .extend('admin')
   .createAny('company')
   .readAny('company')
   .updateAny('company')

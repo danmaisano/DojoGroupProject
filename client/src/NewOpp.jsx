@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
 
 
-function NewOpportunityForm() {
+function NewOpportunityForm(props) {
+  const {user} = props;
   const [formData, setFormData] = useState({
     opportunity_name: '',
     prospect_name: '',
@@ -27,14 +29,17 @@ function NewOpportunityForm() {
   };
 
   const handleSubmit = (e) => {
+    // console.log(formData)
     e.preventDefault();
-    axios.post('http://localhost:8081/opportunities/', formData)
+    axios.post('http://localhost:8081/opportunities/create', formData, {
+      withCredentials: true
+    })
       .then(res => {
         console.log("Opportunity created: ", res.data);
-				navigate("/opportunities")
+        navigate("/dashboard")
       })
       .catch(err => console.log(err));
-  };
+  };  
 
   return (
     <div className="container">
@@ -91,7 +96,7 @@ function NewOpportunityForm() {
         </div>
         <button type="submit" className="btn btn-primary">Create Opportunity</button>
       </form>
-        <a href="/opportunities"><button type="submit" className="btn btn-warning mt-5">Back to Dashboard</button></a>
+        <a href="/dashboard"><button type="submit" className="btn btn-warning mt-5">Back to Dashboard</button></a>
     </div>
   );
 }

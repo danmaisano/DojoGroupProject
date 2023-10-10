@@ -48,6 +48,14 @@ Opportunity.init(
       allowNull: true,
       defaultValue: "Identified",
     },
+    company_id: {
+      type: DataTypes.INTEGER,
+      references: {
+          model: "Company",
+          key: "id",
+      },
+      allowNull: false,  // An opportunity must be linked to a company
+    },
     opportunity_win_date: {
       type: DataTypes.DATE,
       allowNull: true,
