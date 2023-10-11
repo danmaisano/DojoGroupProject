@@ -10,7 +10,7 @@ router.get("/", verifyUser, checkPermission('readOwn','company'), userController
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.get("/logout", userController.logout);
-router.get("/company/:company_id", verifyUser, checkPermission('readAny','company'), userController.getAllUsersByCompany);
+router.get("/:company_id", verifyUser, checkPermission('readOwn','company'), userController.getAllUsersByCompany);
 router.put("/update/:id", verifyUser, checkPermission('update','user'), userController.updateUser);
 router.delete("/delete/:id", verifyUser, checkPermission('deleteOwn','user'), userController.deleteUser);
 

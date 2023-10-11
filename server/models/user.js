@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/init.js";
 import dotenv from "dotenv";
+import Company from "./company.js";
 dotenv.config();
 
 class User extends Model {}
@@ -58,6 +59,7 @@ User.init(
       },
     },
   },
+  
   {
     sequelize,
     modelName: "Users",
@@ -65,5 +67,6 @@ User.init(
     underscored: true,
   }
 );
+
 
 export default User;

@@ -29,7 +29,7 @@ db_connections
 
 app.use("/users", userRoutes);
 app.use("/opportunities", opportunityRoutes);
-app.use("/companies", companyRoutes);
+app.use("/company", companyRoutes);
 
 app.listen(8081, () => {
   console.log("Running...");
