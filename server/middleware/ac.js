@@ -16,7 +16,6 @@ ac.grant('admin')
   .deleteOwn('company')  // Can delete their own company
   .createAny('user')     // Can create a user (potentially an admin) within their company
   .updateAny('user')    // Can update a user within their company
-  .readAny('company'); // Can read any information within their company
 
 ac.grant('superAdmin')
   .extend('admin')

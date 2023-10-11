@@ -6,6 +6,8 @@ import Login from './Login'
 import NewOpportunityForm from './NewOpp'
 import Dashboard from './Dashboard'
 import Cookies from 'js-cookie'
+import CompanyDetails from './CompanyDetails'
+
 
 function App() {
   const [user, setUser] = useState({})
@@ -25,6 +27,7 @@ function App() {
         <Route path='/register' element={<Register user={user} setUser={setUser}/>}></Route>
         <Route path='/login' element={<Login user={user} setUser={setUser}/>}></Route>
         <Route path='/dashboard' element={<Dashboard user={user} setUser={setUser}/>}></Route>
+        <Route path='/company/:id' element={<CompanyDetails user={user} setUser={setUser}/>}></Route>
         <Route path='/newOpp' element={<NewOpportunityForm user={user} setUser={setUser}/>}></Route>
       </Routes>
     </BrowserRouter>

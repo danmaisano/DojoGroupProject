@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/init.js";
+import User from "./user.js";
 
 class Company extends Model {}
 
@@ -39,5 +40,6 @@ Company.init(
     updatedAt: "updated_at",
   }
 );
+
 
 export default Company;

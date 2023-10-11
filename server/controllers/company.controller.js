@@ -30,7 +30,6 @@ const companyController = {
     try {
       const company = await Company.findOne({
         where: { id: req.params.id },
-        include: [{ model: User, as: "users" }],
       });
       if (!company) {
         return res.status(404).json({ Status: "Company not found" });
