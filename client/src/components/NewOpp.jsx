@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 
 function NewOpportunityForm(props) {
-  const {user} = props;
+  const {user, afterSubmit} = props;
   const [formData, setFormData] = useState({
     opportunity_name: '',
     prospect_name: '',
@@ -36,14 +36,14 @@ function NewOpportunityForm(props) {
     })
       .then(res => {
         console.log("Opportunity created: ", res.data);
-        navigate("/dashboard")
+        if (afterSubmit) afterSubmit();
       })
       .catch(err => console.log(err));
   };  
 
   return (
     <div className="container">
-      <h1>Create a New Opportunity</h1>
+      
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Opportunity Name</label>
@@ -96,7 +96,6 @@ function NewOpportunityForm(props) {
         </div>
         <button type="submit" className="btn btn-primary">Create Opportunity</button>
       </form>
-        <a href="/dashboard"><button type="submit" className="btn btn-warning mt-5">Back to Dashboard</button></a>
     </div>
   );
 }
