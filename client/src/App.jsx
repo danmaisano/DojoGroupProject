@@ -3,7 +3,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './Home'
 import Register from './Register'
 import Login from './Login'
-import NewOpportunityForm from './NewOpp'
+import NewOpportunityForm from './components/NewOpp'
 import Dashboard from './Dashboard'
 import Cookies from 'js-cookie'
 

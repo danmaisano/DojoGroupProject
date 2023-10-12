@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Modal, Button } from "react-bootstrap";
+import NewOpportunityForm from "./components/NewOpp";
+
 
 function Dashboard(props) {
   const { user, setUser } = props;
@@ -143,13 +146,37 @@ function Dashboard(props) {
       .catch((err) => console.log(err));
   };
 
+    // State to manage modal visibility
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+    const afterOpportunitySubmit = () => {
+      setShowModal(false); // Close the modal
+      window.location.reload(); // Refresh the page
+    };
+
+
   return (
     <div className="container">
       <h1>Opportunity Dashboard</h1>
       <h2 className="my-3">Welcome {user.first_name}</h2>
-      <Link to="/newOpp" className="btn btn-success mb-3">
+      <Button variant="success" onClick={handleShow}>
         Create New Opportunity
-      </Link>
+      </Button>
+      <Modal show={showModal} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Opportunity</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <NewOpportunityForm user={user} afterSubmit={afterOpportunitySubmit} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close 
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <hr></hr>
       <h4 className="my-3">Current Opportunities</h4>
       <table className="table">
