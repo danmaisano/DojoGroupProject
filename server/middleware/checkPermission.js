@@ -5,6 +5,7 @@ const checkPermission = (action, resource) => {
     // console.log('Checking permissions for:', req.user); 
     
     const userRole = req.user ? req.user.role : null;
+    // console.log(userRole)
     if(!userRole) {
         return res.status(401).send('Unauthorized');
     }
