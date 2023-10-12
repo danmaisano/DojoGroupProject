@@ -103,19 +103,6 @@ function Dashboard(props) {
     }
   };
 
-
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:8081/users/logout")
-      .then((res) => {
-        Cookies.remove("token");
-        Cookies.remove("userData");
-        navigate("/");
-      })
-      .catch((err) => console.log(err));
-  };
-
-
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -222,11 +209,6 @@ function Dashboard(props) {
           ))}
         </tbody>
       </table>
-
-      <button className="btn btn-danger" onClick={handleLogout}>
-        Logout
-      </button>
-      <Link to={`/company/${user.company}`} className="btn btn-primary mx-5">Company Details</Link>
     </div>
   );
 }

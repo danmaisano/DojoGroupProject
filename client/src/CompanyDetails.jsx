@@ -77,17 +77,6 @@ useEffect(() => {
     handleUserBlur(id, "role");
   };
 
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:8081/users/logout")
-      .then((res) => {
-        Cookies.remove("token");
-        Cookies.remove("userData");
-        navigate("/");
-      })
-      .catch((err) => console.log(err));
-  };
-
   return (
     <div className="container">
     <h1>Details for {company ? company.company_name : "Loading..."}</h1>
@@ -143,9 +132,6 @@ useEffect(() => {
             </tbody>
           </table>
         </div>
-      <button className="btn btn-danger" onClick={handleLogout}>
-        Logout
-      </button>
       <Link to="/dashboard" className="btn btn-primary mx-5">Dashboard</Link>
     </div>
   );
