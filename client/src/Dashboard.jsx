@@ -40,18 +40,26 @@ function Dashboard(props) {
   const handleBlur = (id, field) => {
     // Make a copy of the opportunity object to be updated
     const oppToUpdate = opportunities.find((opp) => opp.id === id);
-
+  
     // Clear editing state
     setEditing({});
-
+  
     // If the field being updated is 'status', use the specialized updateStatus function
     if (field === "status") {
       updateStatus(id, oppToUpdate.status);
     } else {
+      const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
+      
       axios
-        .put(`http://localhost:8081/opportunities/${id}`,  { withCredentials: true, 
-          [field]: oppToUpdate[field],
-        })
+        .put(`http://localhost:8081/opportunities/${id}`, 
+          { [field]: oppToUpdate[field] }, 
+          { 
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+          }
+        )
         .then(() => {
           setOpportunities(
             opportunities.map((opp) =>
@@ -62,10 +70,20 @@ function Dashboard(props) {
         .catch((err) => console.log(err));
     }
   };
-
+  
   const updateStatus = (id, newStatus) => {
+    const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
+    
     axios
-      .put(`http://localhost:8081/opportunities/${id}`, { status: newStatus, withCredentials: true  })
+      .put(`http://localhost:8081/opportunities/${id}`, 
+        { status: newStatus }, 
+        { 
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      )
       .then(() => {
         setOpportunities(
           opportunities.map((opp) =>
@@ -75,6 +93,7 @@ function Dashboard(props) {
       })
       .catch((err) => console.log(err));
   };
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
