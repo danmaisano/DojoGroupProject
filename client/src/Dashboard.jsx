@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
-
 
 function Dashboard(props) {
   const { user, setUser } = props;
@@ -146,16 +145,14 @@ function Dashboard(props) {
       .catch((err) => console.log(err));
   };
 
-    // State to manage modal visibility
-    const [showModal, setShowModal] = useState(false);
 
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
-    const afterOpportunitySubmit = () => {
-      setShowModal(false); // Close the modal
-      window.location.reload(); // Refresh the page
-    };
-
+  const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+  const afterOpportunitySubmit = () => {
+    setShowModal(false); // Close the modal
+    window.location.reload(); // Refresh the page
+  };
 
   return (
     <div className="container">
@@ -166,14 +163,15 @@ function Dashboard(props) {
       </Button>
       <Modal show={showModal} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Create New Opportunity</Modal.Title>
+          <Modal.Title>Create a New Opportunity</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Pass the callback to the form */}
           <NewOpportunityForm user={user} afterSubmit={afterOpportunitySubmit} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close 
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
