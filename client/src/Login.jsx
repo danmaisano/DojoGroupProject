@@ -47,7 +47,7 @@ const Login = (props) => {
   };
 
   return (
-    <Container fluid style={{ minHeight: '100vh', background: "#242424"}}>
+    <Container fluid>
       <Row className="justify-content-center">
         <Col lg={5}>
           <div className="card shadow-lg border-0 rounded-lg mt-5">
