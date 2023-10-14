@@ -8,7 +8,7 @@ import NewOpportunityForm from './components/NewOpp'
 import Dashboard from './Dashboard'
 import Cookies from 'js-cookie'
 import CompanyDetails from './CompanyDetails'
-import ContactCard from './components/ContactCard'
+// import ContactCard from './components/ContactCard'
 
 
 
@@ -33,7 +33,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard user={user} setUser={setUser}/>}></Route>
           <Route path='/company/:id' element={<CompanyDetails user={user} setUser={setUser}/>}></Route>
           <Route path='/newOpp' element={<NewOpportunityForm user={user} setUser={setUser}/>}></Route>
-          <Route path='/test' element={<ContactCard user={user} setUser={setUser}/>}></Route>
+          {/* <Route path='/test' element={<ContactCard user={user} setUser={setUser}/>}></Route> */}
         </Routes>
       </Layout>
     </BrowserRouter>

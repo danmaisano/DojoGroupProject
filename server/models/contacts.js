@@ -52,17 +52,14 @@ Contact.init(
             },
             unique: true,
         },
-        user_id: {
+        opportunity_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             references: {
-                model: "User",
-                key: "id",
+              model: "Opportunities", // Note the plural form of the model name
+              key: "id",
             },
-            validate: {
-                notEmpty: true,
-            },
-        },
+            allowNull: true, // Allow contacts to not be associated with any opportunity
+          },
         company_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -103,5 +100,6 @@ Contact.init(
         underscored: true,
     }
 );
+  
 
 export default Contact;

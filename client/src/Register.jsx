@@ -51,9 +51,9 @@ const Register = (props) => {
             confirm_password: !formData.confirm_password,
         };
         setErrors(newErrors);
-        if (errors) {
-            return !Object.values(newErrors).some(error => error);
-            }
+        if (Object.values(newErrors).some(error => error)) {
+            return; 
+        }
         
         axios.post('http://localhost:8081/users/register', formData)
             .then(res => {

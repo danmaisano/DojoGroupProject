@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/init.js";
+import User from "./user.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -13,6 +14,17 @@ Opportunity.init(
       primaryKey: true,
       allowNull: false,
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+          model: "User",
+          key: "id",
+      },
+      validate: {
+          notEmpty: true,
+      },
+  },
     opportunity_name: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -26,10 +38,6 @@ Opportunity.init(
       validate: {
         notEmpty: true,
       },
-    },
-    opportunity_address: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
     },
     pot_rev: {
       type: DataTypes.INTEGER,
@@ -56,22 +64,7 @@ Opportunity.init(
       },
       allowNull: false,  // An opportunity must be linked to a company
     },
-    contact_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Contact",
-        key: "id",
-      },
-    },
     opportunity_win_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    start_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    end_date: {
       type: DataTypes.DATE,
       allowNull: true,
     },
@@ -91,5 +84,10 @@ Opportunity.init(
     underscored: true,
   }
 );
+
+Opportunity.belongsTo(User, {
+  foreignKey: "user_id",
+});
+
 
 export default Opportunity;
