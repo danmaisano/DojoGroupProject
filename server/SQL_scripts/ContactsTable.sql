@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS
         cell_phone VARCHAR(20),
         work_phone VARCHAR(20) NOT NULL,
         email VARCHAR(255) NOT NULL,
+        user_id INTEGER REFERENCES "users" ("id"),
         company_id INTEGER REFERENCES "companies"(id),
         company_title VARCHAR(255) NOT NULL,
         opportunity_id INTEGER REFERENCES "opportunities"(id),

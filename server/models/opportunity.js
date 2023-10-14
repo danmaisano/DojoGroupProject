@@ -56,6 +56,13 @@ Opportunity.init(
       },
       allowNull: false,  // An opportunity must be linked to a company
     },
+    contact_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Contact",
+        key: "id",
+      },
+    },
     opportunity_win_date: {
       type: DataTypes.DATE,
       allowNull: true,
