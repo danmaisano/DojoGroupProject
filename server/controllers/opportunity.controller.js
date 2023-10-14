@@ -42,7 +42,8 @@ const opportunityController = {
       // Create the new opportunity with the company_id from the user
       const newOpportunity = await Opportunity.create({
         ...req.body,
-        company_id: user.company_id
+        company_id: user.company_id,
+        user_id: user.id
       });
   
       return res.status(201).json({ newOpportunity });

@@ -1,6 +1,8 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/init.js";
 import User from "./user.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 class Contact extends Model { }
 
