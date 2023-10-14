@@ -17,7 +17,7 @@ const ContactCard = () => {
     };
 
     return (
-        <div className='w-25'>
+        <div className='m-5'>
             <Card>
                 {/* TODO: Populate information with DB query ----- <= TODO  */}
                 <Card.Header>
@@ -66,7 +66,7 @@ const ContactCard = () => {
                             <h5>Notes:</h5>
                             <img src={edit} className='m-1' />
                         </div>
-                        <p className='border-top border-light p-2'>
+                        <p className='border-top mt-2 border-light p-2'>
                             Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                             Impedit aliquid harum quod corporis, cum expedita veniam itaque
                             architecto facilis commodi asperiores, veritatis incidunt
