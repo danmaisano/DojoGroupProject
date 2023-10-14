@@ -31,6 +31,7 @@ const executeSqlScripts = async () => {
     "UsersTable.sql",    // Ensure this script creates the "users" table
     "OpportunityTable.sql",
     "ContactsTable.sql", // Execute other scripts as needed
+    "OpportunityContactTable.sql",
     // Add more scripts in the desired execution order
   ];
   
