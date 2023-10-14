@@ -18,8 +18,10 @@ function Dashboard(props) {
         .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
         .then((res) => {
           setOpportunities(res.data.opportunities);
+          console.log(".then: ", user);
         })
         .catch((err) => console.log(err));
+        console.log(".catch: ", user);
     }
   }, [user]);
 

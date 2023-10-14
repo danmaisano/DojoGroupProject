@@ -6,16 +6,19 @@ import Cookies from "js-cookie";
 
 function NewOpportunityForm(props) {
   const {user, afterSubmit} = props;
+  console.log("Initial value of user: ", user);
   const [formData, setFormData] = useState({
     opportunity_name: '',
     prospect_name: '',
+    contact_id: 1,
     opportunity_address: 'your moms house', // need to set to empty when live
     pot_rev: 1000, // need to set to empty when live
     chance_of_winning: 50, // need to set to empty when live
 		status: 'identified', // most likely the default value and also the first in the list.
     opportunity_win_date: '2023-09-16', // need to set to empty when live
     start_date: '2023-09-16', // need to set to empty when live
-    end_date: '2023-09-16' // need to set to empty when live
+    end_date: '2023-09-16', // need to set to empty when live
+    user_id: user.id,
   });
 
 	const navigate = useNavigate();
@@ -26,6 +29,7 @@ function NewOpportunityForm(props) {
       ...prevState,
       [name]: value
     }));
+    console.log("handleChange: ", formData);
   };
 
   const handleSubmit = (e) => {
@@ -39,6 +43,7 @@ function NewOpportunityForm(props) {
         if (afterSubmit) afterSubmit();
       })
       .catch(err => console.log(err));
+      console.log("handleSubmit .catch: ", formData);
   };  
 
   return (
@@ -95,6 +100,8 @@ function NewOpportunityForm(props) {
           <input type="date" name="end_date" className="form-control" value={formData.end_date} onChange={handleChange} />
         </div>
         <button type="submit" className="btn btn-primary">Create Opportunity</button>
+        <input type="hidden" name="user_id" value={user.id} />
+        <input type="hidden" name="contact_id" value={1} />
       </form>
     </div>
   );

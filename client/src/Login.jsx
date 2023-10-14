@@ -43,6 +43,7 @@ const Login = (props) => {
 
     if (!Object.values(newErrors).some(error => error)) {
       loginUser(formData.email, formData.password, setUser, navigate);
+      console.log("User object: ", user);
     }
   };
 
