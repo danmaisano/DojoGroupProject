@@ -12,7 +12,6 @@ function NewOpportunityForm(props) {
   const [formData, setFormData] = useState({
     opportunity_name: '',
     // prospect_name: '',
-    contact_id: 1,
     opportunity_address: 'your moms house', // need to set to empty when live
     pot_rev: 1000, // need to set to empty when live
     chance_of_winning: 50, // need to set to empty when live
@@ -136,6 +135,7 @@ function NewOpportunityForm(props) {
         handleClose={() => setShowContactModal(false)}
         handleSelectContact={handleSelectContact}
         user={user}
+        setFormData={setFormData}
       />
 
     </div>
