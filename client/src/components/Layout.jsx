@@ -102,7 +102,7 @@ const Layout = ({ children, user, setUser }) => {
                             </Col>
                         )}
                         <Col md={showSidebar ? 9 : 12} lg={showSidebar ? 10 : 12}>
-                            <main className="mt-4">
+                            <main className="mt-4 vh-100">
                                 <Outlet />
                             </main>
                         </Col>
