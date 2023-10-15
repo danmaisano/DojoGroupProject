@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
+import ContactModal from "./components/Contacts/ContactCard";
 
 
 function Dashboard(props) {
@@ -12,6 +13,26 @@ function Dashboard(props) {
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
 
+  // State for the contact modal
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [contactModals, setContactModals] = useState([]);
+  const contactModalsRefs = {};
+
+  // Open the contact modal
+  const openContactModal = (contact) => {
+    const modalId = Date.now(); // Generate a unique ID for the modal
+    const contactModal = (
+      <ContactModal key={modalId} contact={contact} handleClose={() => closeContactModal(modalId)} />
+    );
+    setContactModals((modals) => [...modals, contactModal]);
+    contactModalsRefs[modalId] = contactModal;
+  };
+
+  // Close the contact modal
+  const closeContactModal = (modalId) => {
+    setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
+  };
 
   useEffect(() => {
     if (user && user.company) {
@@ -23,29 +44,29 @@ function Dashboard(props) {
         .then(([opportunitiesRes, contactsRes]) => {
           // Process the opportunities and contacts responses
           const updatedOpportunities = opportunitiesRes.data.opportunities;
-  
+
           const contacts = contactsRes.data.contacts;
           // Create a map of contact IDs to contacts for easier lookup
           const contactMap = {};
           contacts.forEach((contact) => {
             contactMap[contact.id] = contact;
           });
-  
+
           // Update opportunities with contact information
           const opportunitiesWithContacts = updatedOpportunities.map((opp) => {
             const contact = contactMap[opp.contact_id];
             opp.contact = contact || null;
             return opp;
           });
-  
+
           // Set the updated opportunities in the state
           setOpportunities(opportunitiesWithContacts);
         })
         .catch((err) => console.log(err));
     }
   }, [user]);
-  
-  
+
+
 
   const handleDoubleClick = (id, field) => {
     setEditing({ id, field });
@@ -196,9 +217,12 @@ function Dashboard(props) {
                       />
                     ) : field === "contact_id" ? (
                       opp.contact ? (
-                        `${opp.contact.first_name} ${opp.contact.last_name}`
+                        // Use an anchor tag to open the contact modal
+                        <a href="#" onClick={() => openContactModal(opp.contact)}>
+                          {`${opp.contact.first_name} ${opp.contact.last_name}`}
+                        </a>
                       ) : (
-                        'No Contact'
+                        "No Contact"
                       )
                     ) : field === "pot_rev" ? (
                       `$${opp[field].toLocaleString()}`
@@ -239,6 +263,7 @@ function Dashboard(props) {
           })}
         </tbody>
       </table>
+      {contactModals}
     </div>
   );
 }
