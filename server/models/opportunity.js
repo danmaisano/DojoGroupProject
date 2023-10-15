@@ -32,13 +32,13 @@ Opportunity.init(
         notEmpty: true,
       },
     },
-    prospect_name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
+    // prospect_name: {
+    //   type: DataTypes.STRING(255),
+    //   allowNull: false,
+    //   validate: {
+    //     notEmpty: true,
+    //   },
+    // },
     pot_rev: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -62,7 +62,15 @@ Opportunity.init(
           model: "Company",
           key: "id",
       },
-      allowNull: false,  // An opportunity must be linked to a company
+      allowNull: true,
+    },
+    contact_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Contact",
+        key: "id",
+      },
+      allowNull: true,
     },
     opportunity_win_date: {
       type: DataTypes.DATE,
