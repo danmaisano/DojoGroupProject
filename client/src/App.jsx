@@ -23,23 +23,25 @@ function App() {
       setUser(userData);
     }
   }, []);
-  
+
   return (
     <BrowserRouter>
-      <Layout user={user} setUser={setUser}>
-        <Routes>
-          <Route path='/' element={<Home user={user} setUser={setUser}/>}></Route>
-          <Route path='/register' element={<Register user={user} setUser={setUser}/>}></Route>
-          <Route path='/login' element={<Login user={user} setUser={setUser}/>}></Route>
-          <Route path='/dashboard' element={<Dashboard user={user} setUser={setUser}/>}></Route>
-          <Route path='/company/:id' element={<CompanyDetails user={user} setUser={setUser}/>}></Route>
-          <Route path='/newOpp' element={<NewOpportunityForm user={user} setUser={setUser}/>}></Route>
-          {/* <Route path='/test' element={<ContactCard user={user} setUser={setUser}/>}></Route> */}
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={<Home user={user} setUser={setUser} />} />
+        <Route path="/register" element={<Register user={user} setUser={setUser} />} />
+        <Route path="/login" element={<Login user={user} setUser={setUser} />} />
+        
+        {/* Layout wraps the routes below */}
+        <Route element={<Layout user={user} setUser={setUser} />}>
+          <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser} />} />
+          <Route path="/company/:id" element={<CompanyDetails user={user} setUser={setUser} />} />
+          <Route path="/newOpp" element={<NewOpportunityForm user={user} setUser={setUser} />} />
+          {/* <Route path="/test" element={<ContactCard user={user} setUser={setUser} />} /> */}
+        </Route>
+      </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-
 export default App;
+
