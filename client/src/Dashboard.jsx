@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
 
+
 function Dashboard(props) {
   const { user, setUser } = props;
   const [opportunities, setOpportunities] = useState([]);
@@ -14,10 +15,16 @@ function Dashboard(props) {
 
   useEffect(() => {
     if (user && user.company) {
-      axios
-        .get(`http://localhost:8081/contacts/company/${user.company}`, { withCredentials: true })
-        .then((res) => {
-          const contacts = res.data.contacts;
+      // Use Promise.all to make both API calls in parallel
+      Promise.all([
+        axios.get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true }),
+        axios.get(`http://localhost:8081/contacts/company/${user.company}`, { withCredentials: true }),
+      ])
+        .then(([opportunitiesRes, contactsRes]) => {
+          // Process the opportunities and contacts responses
+          const updatedOpportunities = opportunitiesRes.data.opportunities;
+  
+          const contacts = contactsRes.data.contacts;
           // Create a map of contact IDs to contacts for easier lookup
           const contactMap = {};
           contacts.forEach((contact) => {
@@ -25,17 +32,19 @@ function Dashboard(props) {
           });
   
           // Update opportunities with contact information
-          const opportunitiesWithContacts = opportunities.map((opp) => {
+          const opportunitiesWithContacts = updatedOpportunities.map((opp) => {
             const contact = contactMap[opp.contact_id];
             opp.contact = contact || null;
             return opp;
           });
   
+          // Set the updated opportunities in the state
           setOpportunities(opportunitiesWithContacts);
         })
         .catch((err) => console.log(err));
     }
-  }, [user, opportunities]);
+  }, [user]);
+  
   
 
   const handleDoubleClick = (id, field) => {
