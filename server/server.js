@@ -5,10 +5,12 @@ import db_connections from "./db/init.js";
 import userRoutes from "./routes/user.routes.js";
 import opportunityRoutes from "./routes/opportunity.routes.js";
 import companyRoutes from "./routes/company.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
 
 import "dotenv/config";
 
 const app = express();
+const port = 8081;
 
 app.use(
   cors({
@@ -30,7 +32,8 @@ db_connections
 app.use("/users", userRoutes);
 app.use("/opportunities", opportunityRoutes);
 app.use("/company", companyRoutes);
+app.use("/contacts", contactRoutes);
 
-app.listen(8081, () => {
-  console.log("Running...");
+app.listen(port, () => {
+  console.log("Running...Port: ", port);
 });
