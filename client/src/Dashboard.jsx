@@ -20,10 +20,10 @@ function Dashboard(props) {
   const contactModalsRefs = {};
 
   // Open the contact modal
-  const openContactModal = (contact) => {
+  const openContactModal = (selectedContact) => {
     const modalId = Date.now(); // Generate a unique ID for the modal
     const contactModal = (
-      <ContactModal key={modalId} contact={contact} handleClose={() => closeContactModal(modalId)} />
+      <ContactModal key={modalId} contact={selectedContact} handleClose={() => closeContactModal(modalId)} />
     );
     setContactModals((modals) => [...modals, contactModal]);
     contactModalsRefs[modalId] = contactModal;
@@ -33,6 +33,20 @@ function Dashboard(props) {
   const closeContactModal = (modalId) => {
     setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
   };
+
+  // // Separate API calls
+  // useEffect(() => {
+  //   if (user && user.company) {
+  //     axios
+  //       .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
+  //       .then((res) => {
+  //         setOpportunities(res.data.opportunities);
+  //         console.log(".then: ", user);
+  //       })
+  //       .catch((err) => console.log(err));
+  //       console.log(".catch: ", user);
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (user && user.company) {
