@@ -23,7 +23,7 @@ const loginUser = (email, password, setUser, navigate) => {
       });
       // console.log(userData) 
 
-      Cookies.set("userData", JSON.stringify(userData), { expires: 30 });
+      Cookies.set("userData", JSON.stringify(userData), { expires: 3000 });
       setUser(userData);
 
       navigate("/dashboard");

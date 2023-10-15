@@ -1,10 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/init.js";
-import User from "./user.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-class Contact extends Model { }
+class Contact extends Model {}
 
 Contact.init(
     {
@@ -52,14 +51,17 @@ Contact.init(
             },
             unique: true,
         },
-        opportunity_id: {
+        user_id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-              model: "Opportunities", // Note the plural form of the model name
-              key: "id",
+                model: "User",
+                key: "id",
             },
-            allowNull: true, // Allow contacts to not be associated with any opportunity
-          },
+            validate: {
+                notEmpty: true,
+            },
+        },
         company_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -67,16 +69,10 @@ Contact.init(
                 model: "Company",
                 key: "id",
             },
-            validate: {
-                notEmpty: true,
-            },
         },
         company_title: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
         },
         notes: {
             type: DataTypes.TEXT,
@@ -100,6 +96,5 @@ Contact.init(
         underscored: true,
     }
 );
-  
 
 export default Contact;

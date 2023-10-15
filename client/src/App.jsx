@@ -1,14 +1,17 @@
-import Layout from './components/Layout';
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import Home from './Home';
-import Register from './Register';
-import Login from './Login';
-import NewOpportunityForm from './components/NewOpp';
-import Dashboard from './Dashboard';
-import Cookies from 'js-cookie';
-import CompanyDetails from './CompanyDetails';
-// import ContactCard from './components/ContactCard';
+import Layout from './components/Layout'
+import { useState, useEffect   } from 'react'
+import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom'
+import Home from './Home'
+import Register from './Register'
+import Login from './Login'
+import NewOpportunityForm from './components/NewOpp'
+import Dashboard from './Dashboard'
+import Cookies from 'js-cookie'
+import CompanyDetails from './CompanyDetails'
+import ContactCard from './components/Contacts/ContactCard'
+
+
+
 
 function App() {
   const [user, setUser] = useState({});

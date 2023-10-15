@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
+import ContactModal from "./components/Contacts/ContactCard";
+
 
 function Dashboard(props) {
   const { user, setUser } = props;
@@ -11,19 +13,74 @@ function Dashboard(props) {
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
 
+  // State for the contact modal
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [contactModals, setContactModals] = useState([]);
+  const contactModalsRefs = {};
+
+  // Open the contact modal
+  const openContactModal = (selectedContact) => {
+    const modalId = Date.now(); // Generate a unique ID for the modal
+    const contactModal = (
+      <ContactModal key={modalId} contact={selectedContact} handleClose={() => closeContactModal(modalId)} />
+    );
+    setContactModals((modals) => [...modals, contactModal]);
+    contactModalsRefs[modalId] = contactModal;
+  };
+
+  // Close the contact modal
+  const closeContactModal = (modalId) => {
+    setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
+  };
+
+  // // Separate API calls
+  // useEffect(() => {
+  //   if (user && user.company) {
+  //     axios
+  //       .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
+  //       .then((res) => {
+  //         setOpportunities(res.data.opportunities);
+  //         console.log(".then: ", user);
+  //       })
+  //       .catch((err) => console.log(err));
+  //       console.log(".catch: ", user);
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (user && user.company) {
-      axios
-        .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
-        .then((res) => {
-          setOpportunities(res.data.opportunities);
-          console.log(".then: ", user);
+      // Use Promise.all to make both API calls in parallel
+      Promise.all([
+        axios.get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true }),
+        axios.get(`http://localhost:8081/contacts/company/${user.company}`, { withCredentials: true }),
+      ])
+        .then(([opportunitiesRes, contactsRes]) => {
+          // Process the opportunities and contacts responses
+          const updatedOpportunities = opportunitiesRes.data.opportunities;
+
+          const contacts = contactsRes.data.contacts;
+          // Create a map of contact IDs to contacts for easier lookup
+          const contactMap = {};
+          contacts.forEach((contact) => {
+            contactMap[contact.id] = contact;
+          });
+
+          // Update opportunities with contact information
+          const opportunitiesWithContacts = updatedOpportunities.map((opp) => {
+            const contact = contactMap[opp.contact_id];
+            opp.contact = contact || null;
+            return opp;
+          });
+
+          // Set the updated opportunities in the state
+          setOpportunities(opportunitiesWithContacts);
         })
         .catch((err) => console.log(err));
-        console.log(".catch: ", user);
     }
   }, [user]);
+
+
 
   const handleDoubleClick = (id, field) => {
     setEditing({ id, field });
@@ -44,20 +101,20 @@ function Dashboard(props) {
   const handleBlur = (id, field) => {
     // Make a copy of the opportunity object to be updated
     const oppToUpdate = opportunities.find((opp) => opp.id === id);
-  
+
     // Clear editing state
     setEditing({});
-  
+
     // If the field being updated is 'status', use the specialized updateStatus function
     if (field === "status") {
       updateStatus(id, oppToUpdate.status);
     } else {
       const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-      
+
       axios
-        .put(`http://localhost:8081/opportunities/${id}`, 
-          { [field]: oppToUpdate[field] }, 
-          { 
+        .put(`http://localhost:8081/opportunities/${id}`,
+          { [field]: oppToUpdate[field] },
+          {
             headers: {
               'Authorization': `Bearer ${token}`
             },
@@ -74,14 +131,14 @@ function Dashboard(props) {
         .catch((err) => console.log(err));
     }
   };
-  
+
   const updateStatus = (id, newStatus) => {
     const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-    
+
     axios
-      .put(`http://localhost:8081/opportunities/${id}`, 
-        { status: newStatus }, 
-        { 
+      .put(`http://localhost:8081/opportunities/${id}`,
+        { status: newStatus },
+        {
           headers: {
             'Authorization': `Bearer ${token}`
           },
@@ -97,7 +154,7 @@ function Dashboard(props) {
       })
       .catch((err) => console.log(err));
   };
-  
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -136,36 +193,34 @@ function Dashboard(props) {
       </Modal>
       <hr></hr>
       <h4 className="my-3">Current Opportunities</h4>
-      <div className="table-responsive">
-        <table className="table " style={{ color: 'white' }}>
-          <thead>
-            <tr>
-              <th>Opportunity Name</th>
-              <th>Prospect Name</th>
-              <th>Potential Revenue</th>
-              <th>Chance of Winning (%)</th>
-              <th>Opportunity Win Date</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {opportunities.map((opp, index) => (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Opportunity Name</th>
+            <th>Prospect Name</th>
+            <th>Potential Revenue</th>
+            <th>Chance of Winning (%)</th>
+            <th>Opportunity Win Date</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {opportunities.map((opp, index) => {
+            console.log("Opportunity object:", opp);
+            return (
               <tr key={index}>
                 {[
                   "opportunity_name",
-                  "prospect_name",
+                  "contact_id",
                   "pot_rev",
                   "chance_of_winning",
                   "opportunity_win_date",
                   "start_date",
                   "end_date",
                 ].map((field, i) => (
-                  <td
-                    key={i}
-                    onDoubleClick={() => handleDoubleClick(opp.id, field)}
-                  >
+                  <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)}>
                     {editing.id === opp.id && editing.field === field ? (
                       <input
                         value={opp[field]}
@@ -174,6 +229,15 @@ function Dashboard(props) {
                         onKeyDown={handleKeyDown}
                         autoFocus
                       />
+                    ) : field === "contact_id" ? (
+                      opp.contact ? (
+                        // Use an anchor tag to open the contact modal
+                        <a href="#" onClick={() => openContactModal(opp.contact)}>
+                          {`${opp.contact.first_name} ${opp.contact.last_name}`}
+                        </a>
+                      ) : (
+                        "No Contact"
+                      )
                     ) : field === "pot_rev" ? (
                       `$${opp[field].toLocaleString()}`
                     ) : field === "chance_of_winning" ? (
@@ -209,10 +273,11 @@ function Dashboard(props) {
                   </select>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            );
+          })}
+        </tbody>
+      </table>
+      {contactModals}
     </div>
   );
 }
