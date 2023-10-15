@@ -6,7 +6,7 @@ function Home() {
   return (
     <Container fluid style={{  minHeight: '100vh', paddingTop: '5rem' }}>
       <div className="text-center">
-        <h1>Welcome to Kizer!</h1>
+        <h1>Welcome to Dojo CRM!</h1>
         <p className="lead">Join our community or sign in to continue.</p>
       </div>
       <div className="row justify-content-center mt-4">

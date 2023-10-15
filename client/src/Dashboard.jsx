@@ -136,81 +136,83 @@ function Dashboard(props) {
       </Modal>
       <hr></hr>
       <h4 className="my-3">Current Opportunities</h4>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Opportunity Name</th>
-            <th>Prospect Name</th>
-            <th>Potential Revenue</th>
-            <th>Chance of Winning (%)</th>
-            <th>Opportunity Win Date</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {opportunities.map((opp, index) => (
-            <tr key={index}>
-              {[
-                "opportunity_name",
-                "prospect_name",
-                "pot_rev",
-                "chance_of_winning",
-                "opportunity_win_date",
-                "start_date",
-                "end_date",
-              ].map((field, i) => (
-                <td
-                  key={i}
-                  onDoubleClick={() => handleDoubleClick(opp.id, field)}
-                >
-                  {editing.id === opp.id && editing.field === field ? (
-                    <input
-                      value={opp[field]}
-                      onChange={(e) => handleChange(e, opp.id, field)}
-                      onBlur={() => handleBlur(opp.id, field)}
-                      onKeyDown={handleKeyDown}
-                      autoFocus
-                    />
-                  ) : field === "pot_rev" ? (
-                    `$${opp[field].toLocaleString()}`
-                  ) : field === "chance_of_winning" ? (
-                    `${opp[field]}%`
-                  ) : field === "opportunity_win_date" ||
-                    field === "start_date" ||
-                    field === "end_date" ? (
-                    new Date(opp[field]).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  ) : (
-                    opp[field]
-                  )}
-                </td>
-              ))}
-              <td>
-                <select
-                  value={opp.status || ""}
-                  onChange={(e) => {
-                    opp.status = e.target.value;
-                    handleBlur(opp.id, "status");
-                  }}
-                >
-                  <option value="identified">Identified</option>
-                  <option value="prospecting">Prospecting</option>
-                  <option value="meeting scheduled">Meeting Scheduled</option>
-                  <option value="proposal sent">Proposal Sent</option>
-                  <option value="agreement sent">Agreement Sent</option>
-                  <option value="won">Won</option>
-                  <option value="lost">Lost</option>
-                </select>
-              </td>
+      <div className="table-responsive">
+        <table className="table " style={{ color: 'white' }}>
+          <thead>
+            <tr>
+              <th>Opportunity Name</th>
+              <th>Prospect Name</th>
+              <th>Potential Revenue</th>
+              <th>Chance of Winning (%)</th>
+              <th>Opportunity Win Date</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {opportunities.map((opp, index) => (
+              <tr key={index}>
+                {[
+                  "opportunity_name",
+                  "prospect_name",
+                  "pot_rev",
+                  "chance_of_winning",
+                  "opportunity_win_date",
+                  "start_date",
+                  "end_date",
+                ].map((field, i) => (
+                  <td
+                    key={i}
+                    onDoubleClick={() => handleDoubleClick(opp.id, field)}
+                  >
+                    {editing.id === opp.id && editing.field === field ? (
+                      <input
+                        value={opp[field]}
+                        onChange={(e) => handleChange(e, opp.id, field)}
+                        onBlur={() => handleBlur(opp.id, field)}
+                        onKeyDown={handleKeyDown}
+                        autoFocus
+                      />
+                    ) : field === "pot_rev" ? (
+                      `$${opp[field].toLocaleString()}`
+                    ) : field === "chance_of_winning" ? (
+                      `${opp[field]}%`
+                    ) : field === "opportunity_win_date" ||
+                      field === "start_date" ||
+                      field === "end_date" ? (
+                      new Date(opp[field]).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    ) : (
+                      opp[field]
+                    )}
+                  </td>
+                ))}
+                <td>
+                  <select
+                    value={opp.status || ""}
+                    onChange={(e) => {
+                      opp.status = e.target.value;
+                      handleBlur(opp.id, "status");
+                    }}
+                  >
+                    <option value="identified">Identified</option>
+                    <option value="prospecting">Prospecting</option>
+                    <option value="meeting scheduled">Meeting Scheduled</option>
+                    <option value="proposal sent">Proposal Sent</option>
+                    <option value="agreement sent">Agreement Sent</option>
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
