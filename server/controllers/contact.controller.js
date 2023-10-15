@@ -1,5 +1,5 @@
-import Contact from "../models/contacts";
-import User from "../models/user";
+import Contact from "../models/contacts.js";
+import User from "../models/user.js";
 
 const contactController = {
     // Create a new contact
