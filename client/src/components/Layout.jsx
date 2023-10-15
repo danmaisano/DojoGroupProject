@@ -22,7 +22,7 @@ const Layout = ({ children, user, setUser }) => {
         })
         .catch((err) => console.log(err));
     };
-
+    console.log("Company ID:", user.company);
     return (
         <>
         {user && Object.keys(user).length > 0 && (
@@ -78,7 +78,7 @@ const Layout = ({ children, user, setUser }) => {
                                             Dashboard
                                         </Nav.Link>
                                     </LinkContainer>
-                                    <LinkContainer to="/company/:id">
+                                    <LinkContainer to={`/company/${user.company}`}>
                                         <Nav.Link className=" align-items-center ">
                                             <Building className="nav-icon" /> 
                                             Company Info
