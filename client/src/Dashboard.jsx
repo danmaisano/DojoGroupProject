@@ -15,15 +15,28 @@ function Dashboard(props) {
   useEffect(() => {
     if (user && user.company) {
       axios
-        .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
+        .get(`http://localhost:8081/contacts/company/${user.company}`, { withCredentials: true })
         .then((res) => {
-          setOpportunities(res.data.opportunities);
-          console.log(".then: ", user);
+          const contacts = res.data.contacts;
+          // Create a map of contact IDs to contacts for easier lookup
+          const contactMap = {};
+          contacts.forEach((contact) => {
+            contactMap[contact.id] = contact;
+          });
+  
+          // Update opportunities with contact information
+          const opportunitiesWithContacts = opportunities.map((opp) => {
+            const contact = contactMap[opp.contact_id];
+            opp.contact = contact || null;
+            return opp;
+          });
+  
+          setOpportunities(opportunitiesWithContacts);
         })
         .catch((err) => console.log(err));
-        console.log(".catch: ", user);
     }
-  }, [user]);
+  }, [user, opportunities]);
+  
 
   const handleDoubleClick = (id, field) => {
     setEditing({ id, field });
@@ -44,20 +57,20 @@ function Dashboard(props) {
   const handleBlur = (id, field) => {
     // Make a copy of the opportunity object to be updated
     const oppToUpdate = opportunities.find((opp) => opp.id === id);
-  
+
     // Clear editing state
     setEditing({});
-  
+
     // If the field being updated is 'status', use the specialized updateStatus function
     if (field === "status") {
       updateStatus(id, oppToUpdate.status);
     } else {
       const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-      
+
       axios
-        .put(`http://localhost:8081/opportunities/${id}`, 
-          { [field]: oppToUpdate[field] }, 
-          { 
+        .put(`http://localhost:8081/opportunities/${id}`,
+          { [field]: oppToUpdate[field] },
+          {
             headers: {
               'Authorization': `Bearer ${token}`
             },
@@ -74,14 +87,14 @@ function Dashboard(props) {
         .catch((err) => console.log(err));
     }
   };
-  
+
   const updateStatus = (id, newStatus) => {
     const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-    
+
     axios
-      .put(`http://localhost:8081/opportunities/${id}`, 
-        { status: newStatus }, 
-        { 
+      .put(`http://localhost:8081/opportunities/${id}`,
+        { status: newStatus },
+        {
           headers: {
             'Authorization': `Bearer ${token}`
           },
@@ -97,7 +110,7 @@ function Dashboard(props) {
       })
       .catch((err) => console.log(err));
   };
-  
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -150,65 +163,71 @@ function Dashboard(props) {
           </tr>
         </thead>
         <tbody>
-          {opportunities.map((opp, index) => (
-            <tr key={index}>
-              {[
-                "opportunity_name",
-                "prospect_name",
-                "pot_rev",
-                "chance_of_winning",
-                "opportunity_win_date",
-                "start_date",
-                "end_date",
-              ].map((field, i) => (
-                <td
-                  key={i}
-                  onDoubleClick={() => handleDoubleClick(opp.id, field)}
-                >
-                  {editing.id === opp.id && editing.field === field ? (
-                    <input
-                      value={opp[field]}
-                      onChange={(e) => handleChange(e, opp.id, field)}
-                      onBlur={() => handleBlur(opp.id, field)}
-                      onKeyDown={handleKeyDown}
-                      autoFocus
-                    />
-                  ) : field === "pot_rev" ? (
-                    `$${opp[field].toLocaleString()}`
-                  ) : field === "chance_of_winning" ? (
-                    `${opp[field]}%`
-                  ) : field === "opportunity_win_date" ||
-                    field === "start_date" ||
-                    field === "end_date" ? (
-                    new Date(opp[field]).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  ) : (
-                    opp[field]
-                  )}
+          {opportunities.map((opp, index) => {
+            console.log("Opportunity object:", opp);
+            return (
+              <tr key={index}>
+                {[
+                  "opportunity_name",
+                  "contact_id",
+                  "pot_rev",
+                  "chance_of_winning",
+                  "opportunity_win_date",
+                  "start_date",
+                  "end_date",
+                ].map((field, i) => (
+                  <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)}>
+                    {editing.id === opp.id && editing.field === field ? (
+                      <input
+                        value={opp[field]}
+                        onChange={(e) => handleChange(e, opp.id, field)}
+                        onBlur={() => handleBlur(opp.id, field)}
+                        onKeyDown={handleKeyDown}
+                        autoFocus
+                      />
+                    ) : field === "contact_id" ? (
+                      opp.contact ? (
+                        `${opp.contact.first_name} ${opp.contact.last_name}`
+                      ) : (
+                        'No Contact'
+                      )
+                    ) : field === "pot_rev" ? (
+                      `$${opp[field].toLocaleString()}`
+                    ) : field === "chance_of_winning" ? (
+                      `${opp[field]}%`
+                    ) : field === "opportunity_win_date" ||
+                      field === "start_date" ||
+                      field === "end_date" ? (
+                      new Date(opp[field]).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    ) : (
+                      opp[field]
+                    )}
+                  </td>
+                ))}
+                <td>
+                  <select
+                    value={opp.status || ""}
+                    onChange={(e) => {
+                      opp.status = e.target.value;
+                      handleBlur(opp.id, "status");
+                    }}
+                  >
+                    <option value="identified">Identified</option>
+                    <option value="prospecting">Prospecting</option>
+                    <option value="meeting scheduled">Meeting Scheduled</option>
+                    <option value="proposal sent">Proposal Sent</option>
+                    <option value="agreement sent">Agreement Sent</option>
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                  </select>
                 </td>
-              ))}
-              <td>
-                <select
-                  value={opp.status || ""}
-                  onChange={(e) => {
-                    opp.status = e.target.value;
-                    handleBlur(opp.id, "status");
-                  }}
-                >
-                  <option value="identified">Identified</option>
-                  <option value="prospecting">Prospecting</option>
-                  <option value="meeting scheduled">Meeting Scheduled</option>
-                  <option value="proposal sent">Proposal Sent</option>
-                  <option value="agreement sent">Agreement Sent</option>
-                  <option value="won">Won</option>
-                  <option value="lost">Lost</option>
-                </select>
-              </td>
-            </tr>
-          ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
