@@ -8,7 +8,8 @@ import NewOpportunityForm from './components/NewOpp'
 import Dashboard from './Dashboard'
 import Cookies from 'js-cookie'
 import CompanyDetails from './CompanyDetails'
-// import ContactCard from './components/ContactCard'
+import ContactCard from './components/Contacts/ContactCard'
+
 
 
 
