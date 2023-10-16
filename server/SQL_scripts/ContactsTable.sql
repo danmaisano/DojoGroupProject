@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS
       company_title VARCHAR(255) NOT NULL,
       notes VARCHAR(255),
       created_at TIMESTAMP,
-      updated_at TIMESTAMP
+      updated_at TIMESTAMP,
+      user_id INTEGER REFERENCES "users"(id),
   );
