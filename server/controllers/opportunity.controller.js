@@ -56,16 +56,27 @@ const opportunityController = {
 
   updateOpportunity: async (req, res) => {
     try {
-      const opportunity = await Opportunity.findByPk(req.params.id);
-      if (!opportunity)
+      const { id } = req.params;
+      const updatedFields = req.body;
+  
+      const opportunity = await Opportunity.findByPk(id);
+      if (!opportunity) {
         return res.status(404).json({ error: "Opportunity not found" });
-      await opportunity.update(req.body);
+      }
+  
+      if (updatedFields.status === "won") {
+        updatedFields.opportunity_win_date = new Date();
+      }
+  
+      await opportunity.update(updatedFields);
+  
       return res.json({ opportunity });
     } catch (error) {
       console.error("Error occurred during update:", error);
       return res.status(500).json({ error: "Failed to update opportunity" });
     }
   },
+  
 
   deleteOpportunity: async (req, res) => {
     try {

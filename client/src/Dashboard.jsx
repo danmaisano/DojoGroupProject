@@ -12,6 +12,7 @@ function Dashboard(props) {
   const [opportunities, setOpportunities] = useState([]);
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
+  
 
   // State for the contact modal
   const [showContactModal, setShowContactModal] = useState(false);
@@ -101,59 +102,58 @@ function Dashboard(props) {
   const handleBlur = (id, field) => {
     // Make a copy of the opportunity object to be updated
     const oppToUpdate = opportunities.find((opp) => opp.id === id);
-
+  
     // Clear editing state
     setEditing({});
-
-    // If the field being updated is 'status', use the specialized updateStatus function
+  
+    // If the field being updated is 'status', handle special cases
     if (field === "status") {
-      updateStatus(id, oppToUpdate.status);
-    } else {
-      const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-
-      axios
-        .put(`http://localhost:8081/opportunities/${id}`,
-          { [field]: oppToUpdate[field] },
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            },
-            withCredentials: true
-          }
-        )
-        .then(() => {
-          setOpportunities(
-            opportunities.map((opp) =>
-              opp.id === id ? { ...opp, [field]: oppToUpdate[field] } : opp
-            )
-          );
-        })
-        .catch((err) => console.log(err));
+      if (oppToUpdate.status === "won") {
+        // Set the opportunity_win_date to the current date
+        oppToUpdate.opportunity_win_date = new Date().toISOString();
+        oppToUpdate.chance_of_winning = 100; // Set chance_of_winning to 100% for "won"
+      } else if (oppToUpdate.status === "lost") {
+        oppToUpdate.chance_of_winning = 0; // Set chance_of_winning to 0% for "lost"
+      }
     }
-  };
-
-  const updateStatus = (id, newStatus) => {
-    const token = Cookies.get("token");  // Assuming your token is stored as "token" in cookies
-
+  
+    const token = Cookies.get("token");
+  
     axios
-      .put(`http://localhost:8081/opportunities/${id}`,
-        { status: newStatus },
+      .put(
+        `http://localhost:8081/opportunities/${id}`,
+        {
+          [field]: oppToUpdate[field],
+          status: oppToUpdate.status, // Include the status field in the request body
+          opportunity_win_date: oppToUpdate.opportunity_win_date, // Include opportunity_win_date in the request body
+          chance_of_winning: oppToUpdate.chance_of_winning, // Include chance_of_winning in the request body
+        },
         {
           headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true
+          withCredentials: true,
         }
       )
       .then(() => {
-        setOpportunities(
-          opportunities.map((opp) =>
-            opp.id === id ? { ...opp, status: newStatus } : opp
+        setOpportunities((opps) =>
+          opps.map((opp) =>
+            opp.id === id
+              ? {
+                  ...opp,
+                  [field]: oppToUpdate[field],
+                  status: oppToUpdate.status,
+                  opportunity_win_date: oppToUpdate.opportunity_win_date,
+                  chance_of_winning: oppToUpdate.chance_of_winning,
+                }
+              : opp
           )
         );
       })
       .catch((err) => console.log(err));
   };
+  
+  
 
 
   const handleKeyDown = (e) => {
