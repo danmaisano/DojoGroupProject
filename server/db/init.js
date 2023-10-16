@@ -29,8 +29,8 @@ const executeSqlScripts = async () => {
   const scriptOrder = [
     "CompanyTable.sql",  // Ensure this script creates the "companies" table
     "UsersTable.sql",    // Ensure this script creates the "users" table
-    "OpportunityTable.sql",
     "ContactsTable.sql", // Execute other scripts as needed
+    "OpportunityTable.sql",
     "OpportunityContactTable.sql",
     // Add more scripts in the desired execution order
   ];
