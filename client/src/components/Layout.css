@@ -31,3 +31,10 @@
     border-color: #f5f5f5;
     border-bottom-width: 2px;
 }
+
+.fixed-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}

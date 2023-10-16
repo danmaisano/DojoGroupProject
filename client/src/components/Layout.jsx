@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Button, Form, FormControl, Dropdown, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -9,7 +9,27 @@ import './Layout.css';
 
 const Layout = ({ children, user, setUser }) => {
     const navigate = useNavigate();
-    const [showSidebar, setShowSidebar] = useState(true);
+
+    // Define the breakpoint for md (Bootstrap's default is 768px)
+    const MD_BREAKPOINT = 768;
+    
+    // Initialize state based on window's width
+    const [showSidebar, setShowSidebar] = useState(window.innerWidth > MD_BREAKPOINT);
+
+    useEffect(() => {
+        // Function to toggle sidebar based on window width
+        const handleResize = () => {
+            setShowSidebar(window.innerWidth > MD_BREAKPOINT);
+        };
+
+        // Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup: remove event listener when component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const handleLogout = () => {
         axios
@@ -27,30 +47,13 @@ const Layout = ({ children, user, setUser }) => {
         <>
         {user && Object.keys(user).length > 0 && (
             <>
-                <Navbar bg="dark" variant="dark" expand="md" sticky='top' className="border-bottom border-light">
+                <Navbar bg="dark" variant="dark" expand="md" sticky='top' className="border-bottom border-light d-flex justify-content-between">
                     <Container fluid>
-                        <div className='d-flex'>    
-                        <Button 
-                                variant="outline-success"
-                                onClick={() => setShowSidebar(!showSidebar)}
-                            >
-                                <List />
-                            </Button>
-                            <Navbar.Brand href="/">Dojo CRM</Navbar.Brand>
-                        </div>    
-                        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setShowSidebar(!showSidebar)}>
+                            <List />
+                        </Navbar.Toggle>
+                        <Navbar.Brand href="#" className="mx-auto">Dojo CRM</Navbar.Brand>
                         <Navbar.Collapse id="basic-navbar-nav">
-                            <Form className="d-flex ms-auto">
-                                <FormControl
-                                    type="search"
-                                    placeholder="Search"
-                                    className="mr-2"
-                                    aria-label="Search"
-                                />
-                                <Button variant="outline-success">
-                                    <Search />
-                                </Button>
-                            </Form>
                             <Nav className="ms-auto">
                                 <Dropdown className='Dropdown'>
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -67,10 +70,10 @@ const Layout = ({ children, user, setUser }) => {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-                <Container fluid className='d-flex flex column vh-100'>
+                <Container fluid>
                     <Row className='flex-grow-1'>
                         {showSidebar && (
-                            <Col className="d-flex  border-end border-3 position-sticky top-0" >
+                            <Col className="d-flex  border-end border-3 position-sticky top-0 " >
                                 <Nav className="flex-column " >
                                     <LinkContainer to="/dashboard">
                                         <Nav.Link className=" align-items-center border-bottom border-secondary p-3">
