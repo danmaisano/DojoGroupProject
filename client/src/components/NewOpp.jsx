@@ -11,9 +11,9 @@ function NewOpportunityForm(props) {
   console.log("Initial value of user: ", user);
   const [formData, setFormData] = useState({
     opportunity_name: '',
-    opportunity_address: 'your moms house', // need to set to empty when live
-    pot_rev: 1000, // need to set to empty when live
-    chance_of_winning: 50, // need to set to empty when live
+    opportunity_address: '', // need to set to empty when live
+    pot_rev: 0, // need to set to empty when live
+    chance_of_winning: 10, // need to set to empty when live
     status: 'identified', // most likely the default value and also the first in the list.
     user_id: user.id,
   });

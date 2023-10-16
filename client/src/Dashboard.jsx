@@ -84,8 +84,11 @@ function Dashboard(props) {
 
 
   const handleDoubleClick = (id, field) => {
-    setEditing({ id, field });
+    if (field !== "contact_id") {
+      setEditing({ id, field });
+    }
   };
+  
 
   const handleChange = (e, id, field) => {
     let value = e.target.value;
