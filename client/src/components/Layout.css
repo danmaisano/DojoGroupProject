@@ -1,10 +1,4 @@
 
-.sidebar {
-    position:relative;
-    top: 100;
-    left: 0;
-    
-}
 
 .footer {
     position: sticky;
@@ -27,4 +21,13 @@
 
 :root {
     --bs-emphasis-color: #f5f5f5;
+}
+.btn-outline-success {
+    color: #f5f5f5;
+    border-color: #f5f5f5;
+    margin: 0 0.5rem;
+}
+.navbar{
+    border-color: #f5f5f5;
+    border-bottom-width: 2px;
 }
