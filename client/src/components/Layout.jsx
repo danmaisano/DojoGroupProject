@@ -27,18 +27,18 @@ const Layout = ({ children, user, setUser }) => {
         <>
         {user && Object.keys(user).length > 0 && (
             <>
-                <Navbar bg="dark" variant="dark" expand="md" sticky='top'>
+                <Navbar bg="dark" variant="dark" expand="md" sticky='top' className="border-bottom border-light">
                     <Container fluid>
                         <div className='d-flex'>    
-                            <Navbar.Brand href="/">Dojo CRM</Navbar.Brand>
-                            <Button 
+                        <Button 
                                 variant="outline-success"
                                 onClick={() => setShowSidebar(!showSidebar)}
                             >
                                 <List />
                             </Button>
+                            <Navbar.Brand href="/">Dojo CRM</Navbar.Brand>
                         </div>    
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Form className="d-flex ms-auto">
                                 <FormControl
@@ -67,50 +67,52 @@ const Layout = ({ children, user, setUser }) => {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-                <Container fluid>
-                    <Row>
+                <Container fluid className='d-flex flex column vh-100'>
+                    <Row className='flex-grow-1'>
                         {showSidebar && (
-                            <Col className="d-md-block bg-dark sidebar p-3 d-none">
-                                <Nav className="flex-column  ">
+                            <Col className="d-flex  border-end border-3 position-sticky top-0" >
+                                <Nav className="flex-column " >
                                     <LinkContainer to="/dashboard">
-                                        <Nav.Link className=" align-items-center ">
+                                        <Nav.Link className=" align-items-center border-bottom border-secondary p-3">
                                             <Speedometer className="nav-icon" /> 
                                             Dashboard
                                         </Nav.Link>
                                     </LinkContainer>
                                     <LinkContainer to={`/company/${user.company}`}>
-                                        <Nav.Link className=" align-items-center ">
+                                        <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
                                             <Building className="nav-icon" /> 
                                             Company Info
                                         </Nav.Link>
                                     </LinkContainer>
+                                    
                                     <LinkContainer to="/newOpp">
-                                        <Nav.Link className=" align-items-center ">
+                                        <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
                                             <PlusCircle className="nav-icon" />
                                             Create New Opportunity
                                         </Nav.Link>
                                     </LinkContainer>
+                                    
                                     <LinkContainer to="/test">
-                                        <Nav.Link className=" align-items-center ">
+                                        <Nav.Link className=" align-items-center border-secondary p-3">
                                             <PersonRolodex className="nav-icon" />
                                             Add New Contact
                                         </Nav.Link>
                                     </LinkContainer>
-                                    <Button variant="danger" onClick={handleLogout} >Logout </Button>
                                     {/* ... other links ... */}
                                 </Nav>
                             </Col>
                         )}
-                        <Col md={showSidebar ? 9 : 12} lg={showSidebar ? 10 : 12}>
-                            <main className="mt-4 vh-100">
+                        <Col md={showSidebar ? 9 : 12} lg={showSidebar ? 10 : 12} className='bg-secondary'>
+                            <main className="mt-4">
                                 <Outlet />
                             </main>
                         </Col>
                     </Row>
                 </Container>
+
             </>
         )}
-        <footer className="footer mt-auto py-3 bg-dark vh-10">
+        <footer className="footer mt-auto py-3 bg-dark vh-10 border-top border-light w-100">
             <div className="container">
                 <span className="text-muted">Copyright &copy; Dojo CRM 2023</span>
             </div>
