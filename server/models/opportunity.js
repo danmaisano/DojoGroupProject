@@ -32,13 +32,6 @@ Opportunity.init(
         notEmpty: true,
       },
     },
-    // prospect_name: {
-    //   type: DataTypes.STRING(255),
-    //   allowNull: false,
-    //   validate: {
-    //     notEmpty: true,
-    //   },
-    // },
     pot_rev: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -73,14 +66,6 @@ Opportunity.init(
       allowNull: true,
     },
     opportunity_win_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    updated_at: {
       type: DataTypes.DATE,
       allowNull: true,
     },

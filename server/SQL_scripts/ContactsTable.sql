@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS
       notes VARCHAR(255),
       created_at TIMESTAMP,
       updated_at TIMESTAMP,
-      user_id INTEGER REFERENCES "users"(id),
+      user_id INTEGER REFERENCES "users"(id)
   );

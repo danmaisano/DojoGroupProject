@@ -11,14 +11,10 @@ function NewOpportunityForm(props) {
   console.log("Initial value of user: ", user);
   const [formData, setFormData] = useState({
     opportunity_name: '',
-    // prospect_name: '',
     opportunity_address: 'your moms house', // need to set to empty when live
     pot_rev: 1000, // need to set to empty when live
     chance_of_winning: 50, // need to set to empty when live
     status: 'identified', // most likely the default value and also the first in the list.
-    opportunity_win_date: '2023-09-16', // need to set to empty when live
-    start_date: '2023-09-16', // need to set to empty when live
-    end_date: '2023-09-16', // need to set to empty when live
     user_id: user.id,
   });
 
@@ -77,7 +73,7 @@ function NewOpportunityForm(props) {
           {/* Link to CreateContact Modal and set contact_id in Opportunity Form */}
           <div className="mb-3">
             <label className="form-label">Contact</label>
-            <Button onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
+            <Button className="mx-3" onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
           </div>
 
           {/* <label className="form-label">Prospect Name</label>
@@ -111,18 +107,6 @@ function NewOpportunityForm(props) {
         <div className="mb-3">
           <label className="form-label">Chance of Winning (%)</label>
           <input type="number" name="chance_of_winning" className="form-control" value={formData.chance_of_winning} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Opportunity Win Date</label>
-          <input type="date" name="opportunity_win_date" className="form-control" value={formData.opportunity_win_date} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Start Date</label>
-          <input type="date" name="start_date" className="form-control" value={formData.start_date} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">End Date</label>
-          <input type="date" name="end_date" className="form-control" value={formData.end_date} onChange={handleChange} />
         </div>
         <button type="submit" className="btn btn-primary">Create Opportunity</button>
         <input type="hidden" name="user_id" value={user.id} />

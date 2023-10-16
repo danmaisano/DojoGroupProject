@@ -201,9 +201,6 @@ function Dashboard(props) {
               <th>Prospect Name</th>
               <th>Potential Revenue</th>
               <th>Chance of Winning (%)</th>
-              <th>Opportunity Win Date</th>
-              <th>Start Date</th>
-              <th>End Date</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -217,9 +214,6 @@ function Dashboard(props) {
                     "contact_id",
                     "pot_rev",
                     "chance_of_winning",
-                    "opportunity_win_date",
-                    "start_date",
-                    "end_date",
                   ].map((field, i) => (
                     <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)}>
                       {editing.id === opp.id && editing.field === field ? (
@@ -243,14 +237,6 @@ function Dashboard(props) {
                         `$${opp[field].toLocaleString()}`
                       ) : field === "chance_of_winning" ? (
                         `${opp[field]}%`
-                      ) : field === "opportunity_win_date" ||
-                        field === "start_date" ||
-                        field === "end_date" ? (
-                        new Date(opp[field]).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
                       ) : (
                         opp[field]
                       )}

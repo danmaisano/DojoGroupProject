@@ -132,7 +132,7 @@ useEffect(() => {
             </tbody>
           </table>
         </div>
-      <Link to="/dashboard" className="btn btn-primary mx-5">Dashboard</Link>
+      <Link to="/dashboard" className="btn btn-primary me-5">Dashboard</Link>
     </div>
   );
 }
