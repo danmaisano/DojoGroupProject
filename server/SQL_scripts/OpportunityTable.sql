@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS
         status VARCHAR(255),
         company_id INTEGER REFERENCES "companies"(id),
         user_id INTEGER REFERENCES "users"(id),
-        contact_id INTEGER REFERENCES "contacts"(id)
+        contact_id INTEGER REFERENCES "contacts"(id),
         opportunity_win_date DATE,
         created_at TIMESTAMP,
-        updated_at TIMESTAMP,
+        updated_at TIMESTAMP
     );
 
