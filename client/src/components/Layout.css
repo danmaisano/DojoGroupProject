@@ -34,7 +34,8 @@
 
 .fixed-sidebar {
     position: fixed;
-    top: 0;
-    bottom: 0;
+    top: 1;
+    bottom: 1;
+    width: 15%;
     overflow-y: auto;
 }

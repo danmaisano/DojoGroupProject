@@ -74,41 +74,47 @@ const Layout = ({ children, user, setUser }) => {
                     <Row className='flex-grow-1'>
                         {showSidebar && (
                             <Col className="d-flex  border-end border-3 position-sticky top-0 " >
-                                <Nav className="flex-column " >
-                                    <LinkContainer to="/dashboard">
-                                        <Nav.Link className=" align-items-center border-bottom border-secondary p-3">
-                                            <Speedometer className="nav-icon" /> 
-                                            Dashboard
-                                        </Nav.Link>
-                                    </LinkContainer>
-                                    <LinkContainer to={`/company/${user.company}`}>
-                                        <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
-                                            <Building className="nav-icon" /> 
-                                            Company Info
-                                        </Nav.Link>
-                                    </LinkContainer>
-                                    
-                                    <LinkContainer to="/newOpp">
-                                        <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
-                                            <PlusCircle className="nav-icon" />
-                                            Create New Opportunity
-                                        </Nav.Link>
-                                    </LinkContainer>
-                                    
-                                    <LinkContainer to="/test">
-                                        <Nav.Link className=" align-items-center border-secondary p-3">
-                                            <PersonRolodex className="nav-icon" />
-                                            Add New Contact
-                                        </Nav.Link>
-                                    </LinkContainer>
-                                    {/* ... other links ... */}
-                                </Nav>
+                                <div className="">
+                                    <Nav className="flex-column fixed-sidebar" >
+                                        <LinkContainer to="/dashboard">
+                                            <Nav.Link className=" align-items-center border-bottom border-secondary p-3">
+                                                <Speedometer className="nav-icon" /> 
+                                                Dashboard
+                                            </Nav.Link>
+                                        </LinkContainer>
+                                        <LinkContainer to={`/company/${user.company}`}>
+                                            <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
+                                                <Building className="nav-icon" /> 
+                                                Company Info
+                                            </Nav.Link>
+                                        </LinkContainer>
+                                        
+                                        <LinkContainer to="/newOpp">
+                                            <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
+                                                <PlusCircle className="nav-icon" />
+                                                Create New Opportunity
+                                            </Nav.Link>
+                                        </LinkContainer>
+                                        
+                                        <LinkContainer to="/test">
+                                            <Nav.Link className=" align-items-center border-secondary p-3">
+                                                <PersonRolodex className="nav-icon" />
+                                                Add New Contact
+                                            </Nav.Link>
+                                        </LinkContainer>
+                                        {/* ... other links ... */}
+                                    </Nav>
+                                </div>
                             </Col>
                         )}
                         <Col md={showSidebar ? 9 : 12} lg={showSidebar ? 10 : 12} className='bg-secondary'>
-                            <main className="mt-4">
-                                <Outlet />
-                            </main>
+                            <Row>   
+                                <Col>
+                                    <main className="mt-4">
+                                        <Outlet />
+                                    </main>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </Container>
