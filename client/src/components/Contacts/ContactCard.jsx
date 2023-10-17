@@ -206,8 +206,8 @@ const ContactModal = ({ contact }) => {
                                             onChange={handleContactChange}
                                         />
                                     </div>
-                                    <div  className='d-flex justify-content-center p-1'>
-                                    <button className="btn btn-primary" onClick={saveContact}>Save</button>
+                                    <div className='d-flex justify-content-center p-1'>
+                                        <button className="btn btn-primary" onClick={saveContact}>Save</button>
                                     </div>
                                 </>
                             ) : (
@@ -264,12 +264,16 @@ const ContactModal = ({ contact }) => {
                         </div>
                         {editMode ? (
                             <>
-                                <input
-                                    type="text"
-                                    value={notes}
-                                    onChange={handleNotesChange}
-                                />
-                                <button onClick={handleSaveNotes}>Save</button>
+                                <div className='d-flex justify-content-between'>
+                                    <input
+                                    
+                                        className='col-md-10'
+                                        type="text"
+                                        value={notes}
+                                        onChange={handleNotesChange}
+                                    />
+                                    <button className="btn btn-primary" onClick={handleSaveNotes}>Save</button>
+                                </div>
                             </>
                         ) : (
                             <>
