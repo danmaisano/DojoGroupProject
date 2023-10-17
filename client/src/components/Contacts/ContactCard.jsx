@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Col, Row } from 'react-bootstrap';
 import email from './../../assets/icons/email.svg';
 import phone from './../../assets/icons/phone.svg';
 import cellphone from './../../assets/icons/cellphone.svg';
@@ -151,42 +151,64 @@ const ContactModal = ({ contact }) => {
                         <div>
                             {contactEditMode ? (
                                 <>
-                                    <input
-                                        type="text"
-                                        id='first_name'
-                                        name='first_name'
-                                        value={formData.first_name}
-                                        onChange={handleContactChange}
-                                    />
-                                    <input
-                                        type="text"
-                                        id='last_name'
-                                        name='last_name'
-                                        value={formData.last_name}
-                                        onChange={handleContactChange}
-                                    />
-                                    <input
-                                        type="text"
-                                        id='cell_phone'
-                                        name='cell_phone'
-                                        value={formData.cell_phone}
-                                        onChange={handleContactChange}
-                                    />
-                                    <input
-                                        type="text"
-                                        id='work_phone'
-                                        name='work_phone'
-                                        value={formData.work_phone}
-                                        onChange={handleContactChange}
-                                    />
-                                    <input
-                                        type="text"
-                                        id='email'
-                                        name='email'
-                                        value={formData.email}
-                                        onChange={handleContactChange}
-                                    />
-                                    <button onClick={saveContact}>Save</button>
+                                    <div className='d-flex m-1'>
+                                        <label className='col' for="first_name">First Name:</label>
+                                        <input
+                                            className='col'
+                                            type="text"
+                                            id='first_name'
+                                            name='first_name'
+                                            value={formData.first_name}
+                                            onChange={handleContactChange}
+                                        />
+                                    </div>
+                                    <div className='d-flex m-1'>
+                                        <label className='col' for="last_name">Last Name:</label>
+                                        <input
+                                            className='col'
+                                            type="text"
+                                            id='last_name'
+                                            name='last_name'
+                                            value={formData.last_name}
+                                            onChange={handleContactChange}
+                                        />
+                                    </div>
+                                    <div className='d-flex m-1'>
+                                        <label className='col' for="cell_phone">Cell#:</label>
+                                        <input
+                                            className='col'
+                                            type="text"
+                                            id='cell_phone'
+                                            name='cell_phone'
+                                            value={formData.cell_phone}
+                                            onChange={handleContactChange}
+                                        />
+                                    </div>
+                                    <div className='d-flex m-1'>
+                                        <label className='col' for="work_phone">Work#:</label>
+                                        <input
+                                            className='col'
+                                            type="text"
+                                            id='work_phone'
+                                            name='work_phone'
+                                            value={formData.work_phone}
+                                            onChange={handleContactChange}
+                                        />
+                                    </div>
+                                    <div className='d-flex m-1'>
+                                        <label className='col' for="email">Email:</label>
+                                        <input
+                                            className='col'
+                                            type="text"
+                                            id='email'
+                                            name='email'
+                                            value={formData.email}
+                                            onChange={handleContactChange}
+                                        />
+                                    </div>
+                                    <div  className='d-flex justify-content-center p-1'>
+                                    <button className="btn btn-primary" onClick={saveContact}>Save</button>
+                                    </div>
                                 </>
                             ) : (
                                 <>
