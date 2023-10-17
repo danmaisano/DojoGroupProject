@@ -25,7 +25,7 @@ function Dashboard(props) {
   const closeContactModal = (modalId) => {
     setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
     setShowContactModal(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   // Open the contact modal
@@ -203,6 +203,20 @@ function Dashboard(props) {
     window.location.reload(); // Refresh the page
   };
 
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8081/opportunities/${id}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        setOpportunities((opportunities) =>
+          opportunities.filter((opp) => opp.id !== id)
+        );
+      })
+      .catch((err) => console.log(err));
+  };
+  
+
   return (
     <div className="container">
       <h1>Opportunity Dashboard</h1>
@@ -235,6 +249,7 @@ function Dashboard(props) {
               <th>Potential Revenue</th>
               <th>Chance of Winning (%)</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -291,6 +306,14 @@ function Dashboard(props) {
                       <option value="won">Won</option>
                       <option value="lost">Lost</option>
                     </select>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(opp.id)} // Pass the opportunity id
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
