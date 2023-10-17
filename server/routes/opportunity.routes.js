@@ -6,6 +6,7 @@ import verifyUser from "../middleware/verifyUser.js";
 
 
 router.get("/company/:id", verifyUser, checkPermission('readAny', 'opportunity'), opportunityController.getAllOpportunities);
+router.get("/contact/:id", verifyUser, checkPermission('readOwn', 'opportunity'), opportunityController.getOpportunitiesByContactId);
 router.get("/:id", verifyUser, checkPermission('readAny', 'opportunity'), opportunityController.getOpportunityById);
 router.post("/create", verifyUser, checkPermission('createOwn', 'opportunity'), opportunityController.createOpportunity);
 router.put("/:id", verifyUser, checkPermission('updateAny', 'opportunity'), opportunityController.updateOpportunity);
