@@ -33,6 +33,37 @@ const NewContactModal = (props) => {
         notes: '',
     });
 
+    const [validation, setValidation] = useState({
+        first_name: null,
+        last_name: null,
+        cell_phone: null,
+        work_phone: null,
+        email: null,
+    });
+
+    const validateField = (name, value) => {
+        let valid = null;
+        if (value === '') {
+            valid = false;
+        } else {
+            valid = true;
+        }
+
+        if (name === 'email') {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            valid = emailPattern.test(value);
+        }
+        if (name === 'cell_phone' || name === 'work_phone') {
+            const phonePattern = /^\d{10}$/;
+            valid = phonePattern.test(value);
+        }
+
+        setValidation(prevState => ({
+            ...prevState,
+            [name]: valid
+        }));
+    };
+
     const handleSelectContact = (contactId) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -49,6 +80,7 @@ const NewContactModal = (props) => {
             ...prevData,
             [name]: value,
         }));
+        validateField(name, value);
     };
 
     // Handle form submission
@@ -109,33 +141,36 @@ const NewContactModal = (props) => {
                         <input
                             type="text"
                             name="cell_phone"
-                            className="form-control"
+                            className={`form-control ${validation.cell_phone === false ? 'is-invalid' : ''}`}
                             required
                             value={contactFormData.cell_phone}
                             onChange={handleChange}
                         />
+                        {validation.cell_phone === false && <div className="invalid-feedback">Please enter a 10-digit phone number.</div>}
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Work Phone</label>
                         <input
                             type="text"
                             name="work_phone"
-                            className="form-control"
+                            className={`form-control ${validation.work_phone === false ? 'is-invalid' : ''}`}
                             required
                             value={contactFormData.work_phone}
                             onChange={handleChange}
                         />
+                        {validation.work_phone === false && <div className="invalid-feedback">Please enter a 10-digit phone number.</div>}
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Email</label>
                         <input
                             type="text"
                             name="email"
-                            className="form-control"
+                            className={`form-control ${validation.email === false ? 'is-invalid' : ''}`}
                             required
                             value={contactFormData.email}
                             onChange={handleChange}
                         />
+                        {validation.email === false && <div className="invalid-feedback">Please enter a valid email address.</div>}
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Notes</label>
