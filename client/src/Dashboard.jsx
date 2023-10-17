@@ -12,42 +12,35 @@ function Dashboard(props) {
   const [opportunities, setOpportunities] = useState([]);
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
-  
+
 
   // State for the contact modal
   const [showContactModal, setShowContactModal] = useState(false);
-  const [selectedContact, setSelectedContact] = useState(null);
+  // const [selectedContact, setSelectedContact] = useState(null);
   const [contactModals, setContactModals] = useState([]);
   const contactModalsRefs = {};
+
+  // Close the contact modal
+  const closeContactModal = (modalId) => {
+    setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
+    setShowContactModal(false);
+    window.location.reload();
+  };
 
   // Open the contact modal
   const openContactModal = (selectedContact) => {
     const modalId = Date.now(); // Generate a unique ID for the modal
     const contactModal = (
-      <ContactModal key={modalId} contact={selectedContact} handleClose={() => closeContactModal(modalId)} />
+      <ContactModal 
+      key={modalId} 
+      contact={selectedContact} 
+      handleClose={() => closeContactModal(modalId, closeContactModal)} 
+      />
     );
     setContactModals((modals) => [...modals, contactModal]);
     contactModalsRefs[modalId] = contactModal;
   };
 
-  // Close the contact modal
-  const closeContactModal = (modalId) => {
-    setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
-  };
-
-  // // Separate API calls
-  // useEffect(() => {
-  //   if (user && user.company) {
-  //     axios
-  //       .get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true })
-  //       .then((res) => {
-  //         setOpportunities(res.data.opportunities);
-  //         console.log(".then: ", user);
-  //       })
-  //       .catch((err) => console.log(err));
-  //       console.log(".catch: ", user);
-  //   }
-  // }, [user]);
 
   useEffect(() => {
     if (user && user.company) {
@@ -81,14 +74,11 @@ function Dashboard(props) {
     }
   }, [user]);
 
-
-
   const handleDoubleClick = (id, field) => {
     if (field !== "contact_id") {
       setEditing({ id, field });
     }
   };
-  
 
   const handleChange = (e, id, field) => {
     let value = e.target.value;
@@ -105,10 +95,10 @@ function Dashboard(props) {
   const handleBlur = (id, field) => {
     // Make a copy of the opportunity object to be updated
     const oppToUpdate = opportunities.find((opp) => opp.id === id);
-  
+
     // Clear editing state
     setEditing({});
-  
+
     // If the field being updated is 'status', handle special cases
     if (field === "status") {
       if (oppToUpdate.status === "won") {
@@ -119,9 +109,9 @@ function Dashboard(props) {
         oppToUpdate.chance_of_winning = 0; // Set chance_of_winning to 0% for "lost"
       }
     }
-  
+
     const token = Cookies.get("token");
-  
+
     axios
       .put(
         `http://localhost:8081/opportunities/${id}`,
@@ -143,20 +133,20 @@ function Dashboard(props) {
           opps.map((opp) =>
             opp.id === id
               ? {
-                  ...opp,
-                  [field]: oppToUpdate[field],
-                  status: oppToUpdate.status,
-                  opportunity_win_date: oppToUpdate.opportunity_win_date,
-                  chance_of_winning: oppToUpdate.chance_of_winning,
-                }
+                ...opp,
+                [field]: oppToUpdate[field],
+                status: oppToUpdate.status,
+                opportunity_win_date: oppToUpdate.opportunity_win_date,
+                chance_of_winning: oppToUpdate.chance_of_winning,
+              }
               : opp
           )
         );
       })
       .catch((err) => console.log(err));
   };
-  
-  
+
+
 
 
   const handleKeyDown = (e) => {
@@ -230,7 +220,7 @@ function Dashboard(props) {
                       ) : field === "contact_id" ? (
                         opp.contact ? (
                           // Use an anchor tag to open the contact modal
-                          <a href="#" onClick={() => openContactModal(opp.contact)}>
+                          <a href="#" disabled={showContactModal} onClick={() => openContactModal(opp.contact)}>
                             {`${opp.contact.first_name} ${opp.contact.last_name}`}
                           </a>
                         ) : (
