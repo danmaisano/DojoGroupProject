@@ -29,7 +29,7 @@ function NewOpportunityForm(props) {
       ...prevState,
       [name]: value
     }));
-    console.log("handleChange: ", formData);
+    validateField(name, value);
   };
 
   const handleSubmit = (e) => {
@@ -58,7 +58,46 @@ function NewOpportunityForm(props) {
 
   const handleClose = () => {
     setShowContactModal(false); // This should hide the modal
-};
+  };
+  const [validation, setValidation] = useState({
+    opportunity_name: null,
+    opportunity_address: null,
+    pot_rev: null,
+    chance_of_winning: null,
+    status: null
+  });
+
+  const validateField = (name, value) => {
+    let valid = null;
+    if (value === '') {
+      valid = false;
+    } else {
+      valid = true;
+    }
+
+    if (name === 'chance_of_winning') {
+      const numberValue = Number(value);
+      if (isNaN(numberValue) || numberValue < 0 || numberValue > 100) {
+        valid = false;
+      } else {
+        valid = true;
+      }
+    }
+
+    if (name === 'pot_rev') {
+      const numberValue = Number(value);
+      if (isNaN(numberValue) || numberValue < 0 || numberValue > 10000000000) {
+        valid = false;
+      } else {
+        valid = true;
+      }
+    }
+
+    setValidation(prevState => ({
+      ...prevState,
+      [name]: valid
+    }));
+  };
 
   return (
     <div className="container">
@@ -66,26 +105,42 @@ function NewOpportunityForm(props) {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Opportunity Name</label>
-          <input type="text" name="opportunity_name" className="form-control" required value={formData.opportunity_name} onChange={handleChange} />
+          <input 
+            type="text" 
+            name="opportunity_name" 
+            className={`form-control ${validation.opportunity_name === false ? 'is-invalid' : ''}`} 
+            required 
+            value={formData.opportunity_name} 
+            onChange={handleChange} 
+          />
+          {validation.opportunity_name === false && <div className="invalid-feedback">Required</div>}
         </div>
         <div className="mb-3">
-
           {/* Link to CreateContact Modal and set contact_id in Opportunity Form */}
           <div className="mb-3">
             <label className="form-label">Contact</label>
             <Button className="mx-3" onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
           </div>
-
-          {/* <label className="form-label">Prospect Name</label>
-          <input type="text" name="prospect_name" className="form-control" required value={formData.prospect_name} onChange={handleChange} /> */}
         </div>
         <div className="mb-3">
           <label className="form-label">Opportunity Address</label>
-          <input type="text" name="opportunity_address" className="form-control" value={formData.opportunity_address} onChange={handleChange} />
+          <input 
+            type="text" 
+            name="opportunity_address" 
+            className={`form-control ${validation.opportunity_address === false ? 'is-invalid' : ''}`}
+            value={formData.opportunity_address} 
+            onChange={handleChange} />
+          {validation.opportunity_address === false && <div className="invalid-feedback">Required</div>}
         </div>
         <div className="mb-3">
           <label className="form-label">Potential Revenue</label>
-          <input type="number" name="pot_rev" className="form-control" value={formData.pot_rev} onChange={handleChange} />
+          <input 
+            type="number" 
+            name="pot_rev" 
+            className={`form-control ${validation.pot_rev=== false ? 'is-invalid' : ''}`}
+            value={formData.pot_rev} 
+            onChange={handleChange} />
+            {validation.pot_rev === false && <div className="invalid-feedback">Please enter a number bewteen (0-10000000000).</div>}
         </div>
         <div className="mb-3">
           <label className="form-label">Status</label>
@@ -106,7 +161,12 @@ function NewOpportunityForm(props) {
         </div>
         <div className="mb-3">
           <label className="form-label">Chance of Winning (%)</label>
-          <input type="number" name="chance_of_winning" className="form-control" value={formData.chance_of_winning} onChange={handleChange} />
+          <input type="number" 
+          name="chance_of_winning" 
+          className={`form-control ${validation.chance_of_winning === false ? 'is-invalid' : ''}`}
+          value={formData.chance_of_winning} 
+          onChange={handleChange} />
+          {validation.chance_of_winning === false && <div className="invalid-feedback">Please enter a valid percentage (0-100).</div>}
         </div>
         <button type="submit" className="btn btn-primary">Create Opportunity</button>
         <input type="hidden" name="user_id" value={user.id} />
