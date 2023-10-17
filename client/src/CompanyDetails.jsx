@@ -70,6 +70,19 @@ useEffect(() => {
       .catch((err) => console.log(err));
   };
 
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8081/users/delete/${id}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        setUsers((users) =>
+          users.filter((user) => user.id !== id)
+        );
+      })
+      .catch((err) => console.log(err));
+  };
+
   const handleUserRoleChange = (e, id) => {
     const newRole = e.target.value;
     const userToUpdate = users.find((u) => u.id === id);
@@ -88,6 +101,7 @@ useEffect(() => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -127,6 +141,14 @@ useEffect(() => {
                     <option value="user">User</option>
                   </select>
                 </td>
+                <td>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(u.id)} 
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
