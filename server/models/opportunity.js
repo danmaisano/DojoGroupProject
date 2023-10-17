@@ -69,6 +69,10 @@ Opportunity.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    notes: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+      allowNull: true,
+    },
   },
   {
     sequelize,

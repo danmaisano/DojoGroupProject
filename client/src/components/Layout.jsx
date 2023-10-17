@@ -42,7 +42,6 @@ const Layout = ({ children, user, setUser }) => {
         })
         .catch((err) => console.log(err));
     };
-    console.log("Company ID:", user.company);
     return (
         <>
         {user && Object.keys(user).length > 0 && (

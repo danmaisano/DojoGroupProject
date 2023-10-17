@@ -243,27 +243,27 @@ function Dashboard(props) {
       <div className="table-responsive">
         <table className="table">
           <thead>
-            <tr>
-              <th>Opportunity Name</th>
-              <th>Prospect Name</th>
-              <th>Potential Revenue</th>
-              <th>Chance of Winning (%)</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
+          <tr>
+            <th className="text-center">Opportunity Name</th>
+            <th className="text-center">Prospect Name</th>
+            <th className="text-center">Potential Revenue</th>
+            <th className="text-center">Chance of Winning (%)</th>
+            <th className="text-center">Status</th>
+            <th className="text-center">Actions</th>
+          </tr>
           </thead>
           <tbody>
             {opportunities.map((opp, index) => {
               // console.log("Opportunity object:", opp);
               return (
-                <tr key={index}>
+                <tr key={opp.id}>
                   {[
                     "opportunity_name",
                     "contact_id",
                     "pot_rev",
                     "chance_of_winning",
                   ].map((field, i) => (
-                    <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)}>
+                    <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)} className="text-center">
                       {editing.id === opp.id && editing.field === field ? (
                         <input
                           value={opp[field]}
@@ -275,11 +275,11 @@ function Dashboard(props) {
                       ) : field === "contact_id" ? (
                         opp.contact ? (
                           // Use an anchor tag to open the contact modal
-                          <a href="#" disabled={showContactModal} onClick={() => openContactModal(opp.contact)}>
+                          <a href="#" disabled={showContactModal} onClick={() => openContactModal(opp.contact)} className="text-center">
                             {`${opp.contact.first_name} ${opp.contact.last_name}`}
                           </a>
                         ) : (
-                          <a href="#" onClick={() => openCreateContactModal(opp.id)}>+ Add Contact</a>
+                          <a href="#" onClick={() => openCreateContactModal(opp.id)} className="text-center">+ Add Contact</a>
                         )
                       ) : field === "pot_rev" ? (
                         `$${opp[field].toLocaleString()}`
@@ -290,7 +290,7 @@ function Dashboard(props) {
                       )}
                     </td>
                   ))}
-                  <td>
+                  <td className="text-center">
                     <select
                       value={opp.status || ""}
                       onChange={(e) => {
@@ -307,10 +307,16 @@ function Dashboard(props) {
                       <option value="lost">Lost</option>
                     </select>
                   </td>
-                  <td>
+                  <td className="text-center">
+                    <button
+                      className="btn btn-warning btn-sm me-4"
+                      onClick={() => navigate(`/view-opportunity/${opp.id}`)} 
+                    >
+                      View
+                    </button>
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(opp.id)} // Pass the opportunity id
+                      onClick={() => handleDelete(opp.id)}
                     >
                       Delete
                     </button>

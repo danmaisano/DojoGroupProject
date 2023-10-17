@@ -10,6 +10,7 @@ router.get("/contact/:id", verifyUser, checkPermission('readOwn', 'opportunity')
 router.get("/:id", verifyUser, checkPermission('readAny', 'opportunity'), opportunityController.getOpportunityById);
 router.post("/create", verifyUser, checkPermission('createOwn', 'opportunity'), opportunityController.createOpportunity);
 router.put("/:id", verifyUser, checkPermission('updateAny', 'opportunity'), opportunityController.updateOpportunity);
+router.post("/:id/notes", verifyUser, checkPermission('updateAny', 'opportunity'), opportunityController.addNoteToOpportunity);
 router.delete("/:id", verifyUser, checkPermission('deleteOwn', 'opportunity'), opportunityController.deleteOpportunity);
 
 export default router;
