@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Button, Col, Row } from 'react-bootstrap';
 import email from './../../assets/icons/email.svg';
 import phone from './../../assets/icons/phone.svg';
@@ -85,7 +85,9 @@ const ContactModal = ({ contact }) => {
     };
 
     const handleContactChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        validateField(name, value);  // call validateField when the input changes
     };
 
     const saveContact = () => {
@@ -112,6 +114,39 @@ const ContactModal = ({ contact }) => {
     const handleNotesChange = (e) => {
         setNotes(e.target.value);
     };
+
+    // Validation for contact form
+    const [validation, setValidation] = useState({
+        first_name: null,
+        last_name: null,
+        cell_phone: null,
+        work_phone: null,
+        email: null,
+    });
+
+    const validateField = (name, value) => {
+        let valid = null;
+        if (value === '') {
+            valid = false;
+        } else {
+            valid = true;
+        }
+
+        if (name === 'email') {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            valid = emailPattern.test(value);
+        }
+        if (name === 'cell_phone' || name === 'work_phone') {
+            const phonePattern = /^\d{10}$/;
+            valid = phonePattern.test(value);
+        }
+
+        setValidation(prevState => ({
+            ...prevState,
+            [name]: valid
+        }));
+    };
+
 
     const handleSaveNotes = () => {
         // Save the updated notes to the DB
@@ -152,7 +187,7 @@ const ContactModal = ({ contact }) => {
                             {contactEditMode ? (
                                 <>
                                     <div className='d-flex m-1'>
-                                        <label className='col' for="first_name">First Name:</label>
+                                        <label className='col' htmlFor="first_name">First Name:</label>
                                         <input
                                             className='col'
                                             type="text"
@@ -163,7 +198,7 @@ const ContactModal = ({ contact }) => {
                                         />
                                     </div>
                                     <div className='d-flex m-1'>
-                                        <label className='col' for="last_name">Last Name:</label>
+                                        <label className='col' htmlFor="last_name">Last Name:</label>
                                         <input
                                             className='col'
                                             type="text"
@@ -174,37 +209,40 @@ const ContactModal = ({ contact }) => {
                                         />
                                     </div>
                                     <div className='d-flex m-1'>
-                                        <label className='col' for="cell_phone">Cell#:</label>
+                                        <label className='col' htmlFor="cell_phone">Cell#:</label>
                                         <input
-                                            className='col'
+                                            className={`col ${validation.cell_phone === false ? 'is-invalid' : ''}`}
                                             type="text"
                                             id='cell_phone'
                                             name='cell_phone'
                                             value={formData.cell_phone}
                                             onChange={handleContactChange}
                                         />
+                                        {validation.cell_phone === false && <div className="invalid-feedback">Please enter a 10-digit phone number.</div>}
                                     </div>
                                     <div className='d-flex m-1'>
-                                        <label className='col' for="work_phone">Work#:</label>
+                                        <label className='col' htmlFor="work_phone">Work#:</label>
                                         <input
-                                            className='col'
+                                            className={`col ${validation.work_phone === false ? 'is-invalid' : ''}`}
                                             type="text"
                                             id='work_phone'
                                             name='work_phone'
                                             value={formData.work_phone}
                                             onChange={handleContactChange}
                                         />
+                                        {validation.work_phone === false && <div className="invalid-feedback">Please enter a 10-digit phone number.</div>}
                                     </div>
                                     <div className='d-flex m-1'>
-                                        <label className='col' for="email">Email:</label>
+                                        <label className='col' htmlFor="email">Email:</label>
                                         <input
-                                            className='col'
+                                            className={`col ${validation.email === false ? 'is-invalid' : ''}`}
                                             type="text"
                                             id='email'
                                             name='email'
                                             value={formData.email}
                                             onChange={handleContactChange}
                                         />
+                                        {validation.email === false && <div className="invalid-feedback">Please enter a valid email address.</div>}
                                     </div>
                                     <div className='d-flex justify-content-center p-1'>
                                         <button className="btn btn-primary" onClick={saveContact}>Save</button>
