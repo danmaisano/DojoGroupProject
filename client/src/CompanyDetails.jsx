@@ -48,7 +48,7 @@ useEffect(() => {
     // Clear editing state for users
     setEditing({});
 
-    console.log('ID:', id, 'User to Update:', userToUpdate);
+    // console.log('ID:', id, 'User to Update:', userToUpdate);
 
     // Update the backend (assuming you have an API endpoint to update users)
     axios
@@ -71,6 +71,10 @@ useEffect(() => {
   };
 
   const handleDelete = (id) => {
+    if (id === user.id) {
+      console.log("You cannot delete yourself.");
+      return;
+    }
     axios
       .delete(`http://localhost:8081/users/delete/${id}`, {
         withCredentials: true,
