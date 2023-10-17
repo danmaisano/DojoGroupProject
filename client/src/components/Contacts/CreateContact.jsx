@@ -6,7 +6,18 @@ import Cookies from "js-cookie";
 
 const NewContactModal = (props) => {
     // Set incoming/outgoing props
-    const { user, show, handleClose, afterSubmit, setFormData } = props;
+    const { 
+        user, 
+        show, 
+        handleClose, 
+        afterSubmit, 
+        setFormData, 
+        opportunities,  // Pass opportunities as a prop
+        setOpportunities,  // Pass setOpportunities as a prop
+        opp, 
+        contactId,
+        selectedContact
+    } = props;
 
 
     // Set Form Data state
@@ -47,13 +58,19 @@ const NewContactModal = (props) => {
             withCredentials: true
         })
             .then(res => {
-                console.log("Contact created: ", res.data);
-                if (afterSubmit) afterSubmit();
+                console.log("Contact created: ", res.data.contact.id);
+                
+                if (afterSubmit) afterSubmit(res.data.contact.id);
                 handleSelectContact(res.data.contact.id); // add the contact id to the form data
-                handleClose(); // Close the modal after successful submission
+                const updatedOpportunities = [...opportunities];
+                setOpportunities((updatedOpportunities) => {
+                    handleClose(); // Close the modal after successful submission
+                    // Update the opportunities
+                    return updatedOpportunities;
             })
             .catch(err => console.log(err));
-        console.log("handleSubmit.catch: ", contactFormData);
+            console.log("handleSubmit.catch: ", contactFormData);
+            })
     };
 
 
