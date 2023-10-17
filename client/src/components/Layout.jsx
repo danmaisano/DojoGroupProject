@@ -73,7 +73,7 @@ const Layout = ({ children, user, setUser }) => {
                 <Container fluid>
                     <Row className='flex-grow-1'>
                         {showSidebar && (
-                            <Col className="d-flex  border-end border-3 position-sticky top-0 " >
+                            <Col className="d-flex  border-end border-3 position-sticky top-0 vh-100" >
                                 <div className="">
                                     <Nav className="flex-column fixed-sidebar" >
                                         <LinkContainer to="/dashboard">
