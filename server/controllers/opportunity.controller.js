@@ -27,6 +27,20 @@ const opportunityController = {
     }
   },
 
+  // Get all opportunities associated with a contact
+  getOpportunitiesByContactId: async (req, res) => {
+    try {
+      const contactId = req.params.id;
+      const opportunities = await Opportunity.findAll({ where: { contact_id: contactId } });
+      return res.json({ opportunities });
+    } catch (error) {
+      console.error("Error occurred:", error);
+      return res
+      .status(500)
+      .json({ error: "Failed to retrieve opportunities" });
+    }
+  },
+
   createOpportunity: async (req, res) => {
     try {
       // Assuming the userId of the logged-in user is available in the request (e.g., from a JWT payload or session)
@@ -43,7 +57,6 @@ const opportunityController = {
       const newOpportunity = await Opportunity.create({
         ...req.body,
         company_id: user.company_id,
-        user_id: user.id
       });
   
       return res.status(201).json({ newOpportunity });
@@ -56,27 +69,16 @@ const opportunityController = {
 
   updateOpportunity: async (req, res) => {
     try {
-      const { id } = req.params;
-      const updatedFields = req.body;
-  
-      const opportunity = await Opportunity.findByPk(id);
-      if (!opportunity) {
+      const opportunity = await Opportunity.findByPk(req.params.id);
+      if (!opportunity)
         return res.status(404).json({ error: "Opportunity not found" });
-      }
-  
-      if (updatedFields.status === "won") {
-        updatedFields.opportunity_win_date = new Date();
-      }
-  
-      await opportunity.update(updatedFields);
-  
+      await opportunity.update(req.body);
       return res.json({ opportunity });
     } catch (error) {
       console.error("Error occurred during update:", error);
       return res.status(500).json({ error: "Failed to update opportunity" });
     }
   },
-  
 
   deleteOpportunity: async (req, res) => {
     try {
