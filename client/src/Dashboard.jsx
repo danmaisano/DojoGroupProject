@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
 import ContactModal from "./components/Contacts/ContactCard";
+import NewContactModal from './components/Contacts/CreateContact';
 
 
 function Dashboard(props) {
@@ -24,23 +25,61 @@ function Dashboard(props) {
   const closeContactModal = (modalId) => {
     setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
     setShowContactModal(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   // Open the contact modal
   const openContactModal = (selectedContact) => {
     const modalId = Date.now(); // Generate a unique ID for the modal
     const contactModal = (
-      <ContactModal 
-      key={modalId} 
-      contact={selectedContact} 
-      handleClose={() => closeContactModal(modalId, closeContactModal)} 
+      <ContactModal
+        key={modalId}
+        contact={selectedContact}
+        handleClose={() => closeContactModal(modalId, closeContactModal)}
       />
     );
     setContactModals((modals) => [...modals, contactModal]);
     contactModalsRefs[modalId] = contactModal;
   };
 
+  const openCreateContactModal = (oppId) => {  // Receive oppId and selectedContact
+    const modalId = Date.now(); // Generate a unique ID for the modal
+    const contactModal = (
+        <NewContactModal
+            user={user}
+            show={true}
+            handleClose={() => closeContactModal(modalId, closeContactModal)}
+            afterSubmit={(contactId) => {
+              setShowContactModal(false); // Close the modal
+              window.location.reload(); // Refresh the page
+  
+              // Add contact ID to the opportunity represented by oppId
+              axios.put(`http://localhost:8081/opportunities/${oppId}`, { contact_id: contactId }, {
+                withCredentials: true
+              })
+              .then(() => {
+                // Update the state to reflect the changes
+                setOpportunities((opportunities) => {
+                  return opportunities.map((opportunity) => {
+                    if (opportunity.id === oppId) {
+                      return {
+                        ...opportunity,
+                        contact_id: contactId,
+                      };
+                    } else {
+                      return opportunity;
+                    }
+                  });
+                });
+              })
+              .catch((err) => console.log(err));
+            }}
+        />
+    );
+    setContactModals((modals) => [...modals, contactModal]);
+    contactModalsRefs[modalId] = contactModal;
+  };
+  
 
   useEffect(() => {
     if (user && user.company) {
@@ -158,7 +197,8 @@ function Dashboard(props) {
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
-  const afterOpportunitySubmit = () => {
+
+  const afterOpportunitySubmit = (contact) => {
     setShowModal(false); // Close the modal
     window.location.reload(); // Refresh the page
   };
@@ -199,7 +239,7 @@ function Dashboard(props) {
           </thead>
           <tbody>
             {opportunities.map((opp, index) => {
-              console.log("Opportunity object:", opp);
+              // console.log("Opportunity object:", opp);
               return (
                 <tr key={index}>
                   {[
@@ -224,7 +264,7 @@ function Dashboard(props) {
                             {`${opp.contact.first_name} ${opp.contact.last_name}`}
                           </a>
                         ) : (
-                          "No Contact"
+                          <a href="#" onClick={() => openCreateContactModal(opp.id)}>+ Add Contact</a>
                         )
                       ) : field === "pot_rev" ? (
                         `$${opp[field].toLocaleString()}`
