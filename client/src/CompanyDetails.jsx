@@ -73,6 +73,7 @@ useEffect(() => {
   const handleDelete = (id) => {
     if (id === user.id) {
       console.log("You cannot delete yourself.");
+      alert("You cannot delete yourself.");
       return;
     }
     axios
