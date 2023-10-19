@@ -41,9 +41,10 @@ function NewOpportunityForm(props) {
       .then(res => {
         console.log("Opportunity created: ", res.data);
         if (afterSubmit) afterSubmit();
+        navigate("/dashboard");
       })
       .catch(err => console.log(err));
-    console.log("handleSubmit .catch: ", formData);
+      console.log("handleSubmit .catch: ", formData);
   };
 
   // Handle Adding a Contact
