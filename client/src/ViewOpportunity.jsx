@@ -61,6 +61,20 @@ function ViewOpportunity() {
       .catch((err) => console.log(err));
   };
 
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    }
+    return null;
+};
+
+// Open default email client and prefil address
+const sendEmail = () => {
+  window.location.href = 'mailto:johndoe@companyname.com';
+};
+
   return (
     <div className="container">
       <h2>{opportunity.opportunity_name}</h2>
@@ -87,10 +101,10 @@ function ViewOpportunity() {
                 {`${contact.first_name} ${contact.last_name}`}
               </p>
               <p>
-                <strong>Email:</strong> {contact.email}
+                <strong>Email:</strong> <a href="#" onClick={sendEmail}>{contact.email}</a>
               </p>
               <p>
-                <strong>Cell Phone:</strong> {contact.cell_phone}
+                <strong>Cell Phone:</strong> {formatPhoneNumber(contact.cell_phone)}
               </p>
             </>
           ) : (
