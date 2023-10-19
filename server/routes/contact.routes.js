@@ -8,6 +8,7 @@ router.get("/user/:id", verifyUser, checkPermission('readOwn', 'contact'), conta
 router.get("/company/:id", verifyUser, checkPermission('readOwn', 'contact'), contactController.getAllContactsByCompany);
 router.get("/company/:id/opportunity/:opportunity_id", verifyUser, checkPermission('readOwn', 'contact'), contactController.getAllContactsByCompanyAndOpportunity);
 router.get("/:id", verifyUser, checkPermission('readOwn', 'contact'), contactController.getContact);
+router.get("/user/own/:id", verifyUser, checkPermission('readOwn', 'contact'), contactController.getAllContactsByUser);
 router.post("/create", verifyUser, checkPermission('createOwn', 'contact'), contactController.createContact);
 router.put("/:id", verifyUser, checkPermission('updateOwn', 'contact'), contactController.updateContact);
 router.delete("/:id", verifyUser, checkPermission('deleteOwn', 'contact'), contactController.deleteContact);
