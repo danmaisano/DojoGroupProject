@@ -95,10 +95,10 @@ const Layout = ({ children, user, setUser }) => {
                                             </Nav.Link>
                                         </LinkContainer>
                                         
-                                        <LinkContainer to="/test">
+                                        <LinkContainer to="/contacts">
                                             <Nav.Link className=" align-items-center border-secondary p-3">
                                                 <PersonRolodex className="nav-icon" />
-                                                Add New Contact
+                                                Contacts
                                             </Nav.Link>
                                         </LinkContainer>
                                         {/* ... other links ... */}
