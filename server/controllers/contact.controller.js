@@ -24,9 +24,26 @@ const contactController = {
         }
     },
 
+    // Get all contacts by User ID
+    getAllContactsByUser: async (req, res) => {
+        try {
+            const contacts = await Contact.findAll({
+                where: { user_id: req.params.id },
+            });
+            if (!contacts) {
+                return res.status(404).json({ Status: "Contacts not found" });
+            }
+            return res.json({ Status: "Success", contacts });
+        } catch (error) {
+            console.error("Error occurred while fetching contacts:", error);
+            return res.status(500).json({ Status: "Failed to fetch contacts" });
+        }
+    },
+
     // Get all contacts by company ID
     getAllContactsByCompany: async (req, res) => {
         try {
+            console.log(req.params.id);
             const contacts = await Contact.findAll({
                 where: { company_id: req.params.id },
             });
