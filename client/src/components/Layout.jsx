@@ -101,7 +101,6 @@ const Layout = ({ children, user, setUser }) => {
                                                 Contacts
                                             </Nav.Link>
                                         </LinkContainer>
-                                        {/* ... other links ... */}
                                     </Nav>
                                 </div>
                             </Col>
@@ -117,7 +116,6 @@ const Layout = ({ children, user, setUser }) => {
                         </Col>
                     </Row>
                 </Container>
-
             </>
         )}
         <footer className="footer mt-auto py-3 bg-dark vh-10 border-top border-light w-100">
