@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Navigate, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -49,14 +49,14 @@ function ContactsList(props) {
     useEffect(() => {
         console.log("User ID: ", userId);
         console.log("Company ID: ", companyId);
-        // Check if the user and user's company are available.
+        // Check if user
         if (user) {
             // Get contacts
             getUserContacts(userId);
             getCompanyContacts(companyId);
         } else {
             // Navigate to login page with react-router-dom
-            redirect('/login');
+            navigate('/login');
         }
     }, [user]);
 
