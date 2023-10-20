@@ -50,7 +50,7 @@ useEffect(() => {
 
     // console.log('ID:', id, 'User to Update:', userToUpdate);
 
-    // Update the backend (assuming you have an API endpoint to update users)
+    // Update the backend
     axios
       .put(`http://localhost:8081/users/update/${id}`, 
         {
@@ -140,7 +140,7 @@ useEffect(() => {
                   <select
                     value={u.role || ""}
                     onChange={(e) => handleUserRoleChange(e, u.id)}
-                    disabled={user.role !== "admin"} // Only allow admins to change roles
+                    disabled={user.role !== "admin" && user.role !== "superAdmin"} // Only allow admins to change roles
                   >
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
