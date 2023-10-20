@@ -86,7 +86,7 @@ const Layout = ({ children, user, setUser }) => {
                                 <Dropdown className='Dropdown'>
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                                         <PersonFill className="nav-icon" />
-                                        <span>{user.first_name}</span>
+                                        <span className='pe-3'>{user.first_name} {user.last_name}</span>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu className="text-right" style={{ right: 0, left: 'auto' }}>
                                         <Dropdown.Item href="/profile">Settings</Dropdown.Item>
