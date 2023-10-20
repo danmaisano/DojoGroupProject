@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Table } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
 import ContactModal from "./components/Contacts/ContactCard";
 import NewContactModal from './components/Contacts/CreateContact';
@@ -222,7 +222,7 @@ function Dashboard(props) {
       <h1>Current Opportunities</h1>
       <hr></hr>
       <div className="table-responsive">
-        <table className="table">
+        <Table className="table" striped bordered hover variant="dark">
           <thead>
           <tr>
             <th className="text-center">Opportunity Name</th>
@@ -306,7 +306,7 @@ function Dashboard(props) {
               );
             })}
           </tbody>
-        </table>
+        </Table>
       </div>
       <hr></hr> 
       <div className='d-flex justify-content-left'>

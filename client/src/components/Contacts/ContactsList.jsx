@@ -107,6 +107,7 @@ function ContactsList(props) {
         <Container className='card pt-3 pb-3'>
             <h1>Contacts</h1>
             <hr />
+            <div className="table-responsive">
             <Tabs
                 className="border-bottom"
                 defaultActiveKey="My Contacts"
@@ -115,7 +116,7 @@ function ContactsList(props) {
                     title="My Contacts"
                     eventKey="My Contacts"
                 >
-                    <Table striped bordered hover variant="dark">
+                    <Table striped bordered hover variant="dark" >
                         <thead>
                             <tr>
                                 <th className="text-center">Name</th>
@@ -186,6 +187,7 @@ function ContactsList(props) {
                     </Table>
                 </Tab>
             </Tabs>
+            </div>
             {contactModals}
             <div className='d-flex justify-content-left'>
                 <Button variant="success" className='btn btn-small btn-success m-1' href='/newContact' >

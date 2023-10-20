@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams} from "react-router-dom";
+import Table from "react-bootstrap/Table";
 import Cookies from "js-cookie";
 
 function CompanyDetails(props) {
@@ -101,64 +102,66 @@ useEffect(() => {
       <hr />
         <div className="">
           <h4 className="mb-4 mt-2">Company Users</h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u, index) => (
-                <tr key={index}>
-                  <td onDoubleClick={() => handleDoubleClick(u.id, "name")}>
-                    {editing.id === u.id && editing.field === "name" ? (
-                      <input
-                        value={`${u.first_name} ${u.last_name}`}
-                        onChange={(e) => handleUserChange(e, u.id, "name")}
-                        onBlur={() => handleUserBlur(u.id, "name")}
-                        autoFocus
-                      />
-                    ) : (
-                      `${u.first_name} ${u.last_name}`
-                    )}
-                  </td>
-                  <td onDoubleClick={() => handleDoubleClick(u.id, "email")}>
-                    {editing.id === u.id && editing.field === "email" ? (
-                      <input
-                        value={u.email}
-                        onChange={(e) => handleUserChange(e, u.id, "email")}
-                        onBlur={() => handleUserBlur(u.id, "email")}
-                        autoFocus
-                      />
-                    ) : (
-                      u.email
-                    )}
+          <div className="table-responsive">
+            <Table className="table"  striped bordered hover variant="dark">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u, index) => (
+                  <tr key={index}>
+                    <td onDoubleClick={() => handleDoubleClick(u.id, "name")}>
+                      {editing.id === u.id && editing.field === "name" ? (
+                        <input
+                          value={`${u.first_name} ${u.last_name}`}
+                          onChange={(e) => handleUserChange(e, u.id, "name")}
+                          onBlur={() => handleUserBlur(u.id, "name")}
+                          autoFocus
+                        />
+                      ) : (
+                        `${u.first_name} ${u.last_name}`
+                      )}
+                    </td>
+                    <td onDoubleClick={() => handleDoubleClick(u.id, "email")}>
+                      {editing.id === u.id && editing.field === "email" ? (
+                        <input
+                          value={u.email}
+                          onChange={(e) => handleUserChange(e, u.id, "email")}
+                          onBlur={() => handleUserBlur(u.id, "email")}
+                          autoFocus
+                        />
+                      ) : (
+                        u.email
+                      )}
+                    </td>
+                    <td>
+                    <select
+                      value={u.role || ""}
+                      onChange={(e) => handleUserRoleChange(e, u.id)}
+                      disabled={user.role !== "admin" && user.role !== "superAdmin"} // Only allow admins to change roles
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                    </select>
                   </td>
                   <td>
-                  <select
-                    value={u.role || ""}
-                    onChange={(e) => handleUserRoleChange(e, u.id)}
-                    disabled={user.role !== "admin" && user.role !== "superAdmin"} // Only allow admins to change roles
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                  </select>
-                </td>
-                <td>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(u.id)} 
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(u.id)} 
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
       <hr />
       <div className='d-flex justify-content-left'>
