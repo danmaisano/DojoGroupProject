@@ -39,3 +39,11 @@
     width: 15%;
     overflow-y: auto;
 }
+
+.active-link {
+    background-color: #1a1818cb;  
+}
+.fixed-sidebar .nav-icon {
+    color: inherit;  
+}
+
