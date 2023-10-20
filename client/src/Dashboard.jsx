@@ -218,28 +218,9 @@ function Dashboard(props) {
   
 
   return (
-    <div className="container">
-      <h1>Opportunity Dashboard</h1>
-      <h2 className="my-3">Welcome {user.first_name}</h2>
-      <Button variant="success" onClick={handleShow}>
-        Create New Opportunity
-      </Button>
-      <Modal show={showModal} onHide={handleClose} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Create a New Opportunity</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* Pass the callback to the form */}
-          <NewOpportunityForm user={user} afterSubmit={afterOpportunitySubmit} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <div className="container card pb-3 pt-3">
+      <h1>Current Opportunities</h1>
       <hr></hr>
-      <h4 className="my-3">Current Opportunities</h4>
       <div className="table-responsive">
         <table className="table">
           <thead>
@@ -327,6 +308,25 @@ function Dashboard(props) {
           </tbody>
         </table>
       </div>
+      <hr></hr> 
+      <div className='d-flex justify-content-left'>
+        <Button variant="success" href="/newOpp" >
+          Create New Opportunity
+        </Button>
+      </div>
+      <Modal show={showModal} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+        </Modal.Header>
+        <Modal.Body>
+          {/* Pass the callback to the form */}
+          <NewOpportunityForm user={user} afterSubmit={afterOpportunitySubmit} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {contactModals}
     </div>
   );

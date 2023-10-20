@@ -96,10 +96,11 @@ useEffect(() => {
   };
 
   return (
-    <div className="container">
-    <h1>Details for {company ? company.company_name : "Loading..."}</h1>
-        <div>
-          <h4 className="mb-2 mt-5">Company Users</h4>
+    <div className="container card pb-3 pt-3">
+      <h1> {company ? company.company_name : "Loading..."}</h1>
+      <hr />
+        <div className="">
+          <h4 className="mb-4 mt-2">Company Users</h4>
           <table className="table">
             <thead>
               <tr>
@@ -159,7 +160,10 @@ useEffect(() => {
             </tbody>
           </table>
         </div>
-      <Link to="/dashboard" className="btn btn-primary me-5">Dashboard</Link>
+      <hr />
+      <div className='d-flex justify-content-left'>
+        <Link to="/addAUser" className="btn btn-success m-1">Add a User</Link>
+      </div>
     </div>
   );
 }

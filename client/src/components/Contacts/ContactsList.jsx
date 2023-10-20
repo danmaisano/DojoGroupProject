@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Button from 'react-bootstrap/Button';
 import { Container } from 'react-bootstrap';
 import ContactModal from './ContactCard';
 
@@ -103,7 +104,9 @@ function ContactsList(props) {
     };
 
     return (
-        <Container className='border rounded p-0 border-dark shadow'>
+        <Container className='card pt-3 pb-3'>
+            <h1>Contacts</h1>
+            <hr />
             <Tabs
                 className="border-bottom"
                 defaultActiveKey="My Contacts"
@@ -184,6 +187,11 @@ function ContactsList(props) {
                 </Tab>
             </Tabs>
             {contactModals}
+            <div className='d-flex justify-content-left'>
+                <Button variant="success" className='btn btn-small btn-success m-1' href='/newContact' >
+                    Add A New Contact
+                </Button>
+            </div>
         </Container>
     )
 }
