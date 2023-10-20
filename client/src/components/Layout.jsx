@@ -9,7 +9,7 @@ import './Layout.css';
 
 const Layout = ({ children, user, setUser }) => {
     const navigate = useNavigate();
-    
+    const [pageTitle, setPageTitle] = useState('Dashboard');
 
     // Define a function to check if a path is active
     const location = useLocation();
@@ -28,6 +28,24 @@ const Layout = ({ children, user, setUser }) => {
     const [showSidebar, setShowSidebar] = useState(window.innerWidth > MD_BREAKPOINT);
 
     useEffect(() => {
+            // Update the page title based on the current path
+        const currentPath = location.pathname;
+        if (currentPath.includes('dashboard')) {
+            setPageTitle('Dashboard');
+        } else if (currentPath.includes('company')) {
+            setPageTitle('Company Info');
+        } else if (currentPath.includes('newOpp')) {
+            setPageTitle('New Opportunity');  // Set title for Create New Opportunity page
+        } else if (currentPath.includes('contacts')) {
+            setPageTitle('Contacts');
+        } else if (currentPath.includes('profile')) {
+            setPageTitle('Profile');
+        } else if (currentPath.includes('activity')) {
+            setPageTitle('Activity Log');
+        } else if (currentPath.includes('view-opportunity')) {
+            setPageTitle('Opportunity Details');
+        }
+        
         // Function to toggle sidebar based on window width
         const handleResize = () => {
             setShowSidebar(window.innerWidth > MD_BREAKPOINT);
@@ -40,7 +58,7 @@ const Layout = ({ children, user, setUser }) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         axios
@@ -62,12 +80,13 @@ const Layout = ({ children, user, setUser }) => {
                         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setShowSidebar(!showSidebar)}>
                             <List />
                         </Navbar.Toggle>
-                        <Navbar.Brand href="#" className="mx-auto">Dojo CRM</Navbar.Brand>
+                        <Navbar.Brand href="#" className="mx-auto">{pageTitle}</Navbar.Brand>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ms-auto">
                                 <Dropdown className='Dropdown'>
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                        <PersonFill />
+                                        <PersonFill className="nav-icon" />
+                                        <span>{user.first_name}</span>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu className="text-right" style={{ right: 0, left: 'auto' }}>
                                         <Dropdown.Item href="/profile">Settings</Dropdown.Item>
