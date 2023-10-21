@@ -14,9 +14,9 @@
 .dropdown-menu {
     right: 10px !important;
 }
-/* Custom CSS */
+
 .nav-icon {
-    margin-right: 1rem;  /* Adjust as needed */
+    margin-right: 1rem;  
 }
 
 :root {
@@ -39,3 +39,11 @@
     width: 15%;
     overflow-y: auto;
 }
+
+.active-link {
+    background-color: #1a1818cb;  
+}
+.fixed-sidebar .nav-icon {
+    color: inherit;  
+}
+

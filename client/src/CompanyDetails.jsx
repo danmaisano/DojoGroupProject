@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams} from "react-router-dom";
+import Table from "react-bootstrap/Table";
 import Cookies from "js-cookie";
 
 function CompanyDetails(props) {
@@ -73,6 +74,7 @@ useEffect(() => {
   const handleDelete = (id) => {
     if (id === user.id) {
       console.log("You cannot delete yourself.");
+      alert("You cannot delete yourself.");
       return;
     }
     axios
@@ -95,70 +97,76 @@ useEffect(() => {
   };
 
   return (
-    <div className="container">
-    <h1>Details for {company ? company.company_name : "Loading..."}</h1>
-        <div>
-          <h4 className="mb-2 mt-5">Company Users</h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u, index) => (
-                <tr key={index}>
-                  <td onDoubleClick={() => handleDoubleClick(u.id, "name")}>
-                    {editing.id === u.id && editing.field === "name" ? (
-                      <input
-                        value={`${u.first_name} ${u.last_name}`}
-                        onChange={(e) => handleUserChange(e, u.id, "name")}
-                        onBlur={() => handleUserBlur(u.id, "name")}
-                        autoFocus
-                      />
-                    ) : (
-                      `${u.first_name} ${u.last_name}`
-                    )}
-                  </td>
-                  <td onDoubleClick={() => handleDoubleClick(u.id, "email")}>
-                    {editing.id === u.id && editing.field === "email" ? (
-                      <input
-                        value={u.email}
-                        onChange={(e) => handleUserChange(e, u.id, "email")}
-                        onBlur={() => handleUserBlur(u.id, "email")}
-                        autoFocus
-                      />
-                    ) : (
-                      u.email
-                    )}
+    <div className="container card pb-3 pt-3">
+      <h1> {company ? company.company_name : "Loading..."}</h1>
+      <hr />
+        <div className="">
+          <h4 className="mb-4 mt-2">Company Users</h4>
+          <div className="table-responsive">
+            <Table className="table"  striped bordered hover variant="dark">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u, index) => (
+                  <tr key={index}>
+                    <td onDoubleClick={() => handleDoubleClick(u.id, "name")}>
+                      {editing.id === u.id && editing.field === "name" ? (
+                        <input
+                          value={`${u.first_name} ${u.last_name}`}
+                          onChange={(e) => handleUserChange(e, u.id, "name")}
+                          onBlur={() => handleUserBlur(u.id, "name")}
+                          autoFocus
+                        />
+                      ) : (
+                        `${u.first_name} ${u.last_name}`
+                      )}
+                    </td>
+                    <td onDoubleClick={() => handleDoubleClick(u.id, "email")}>
+                      {editing.id === u.id && editing.field === "email" ? (
+                        <input
+                          value={u.email}
+                          onChange={(e) => handleUserChange(e, u.id, "email")}
+                          onBlur={() => handleUserBlur(u.id, "email")}
+                          autoFocus
+                        />
+                      ) : (
+                        u.email
+                      )}
+                    </td>
+                    <td>
+                    <select
+                      value={u.role || ""}
+                      onChange={(e) => handleUserRoleChange(e, u.id)}
+                      disabled={user.role !== "admin" && user.role !== "superAdmin"} // Only allow admins to change roles
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                    </select>
                   </td>
                   <td>
-                  <select
-                    value={u.role || ""}
-                    onChange={(e) => handleUserRoleChange(e, u.id)}
-                    disabled={user.role !== "admin" && user.role !== "superAdmin"} // Only allow admins to change roles
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                  </select>
-                </td>
-                <td>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(u.id)} 
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(u.id)} 
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
-      <Link to="/dashboard" className="btn btn-primary me-5">Dashboard</Link>
+      <hr />
+      <div className='d-flex justify-content-left'>
+        <Link to="/addAUser" className="btn btn-success m-1">Add a User</Link>
+      </div>
     </div>
   );
 }

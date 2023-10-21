@@ -101,8 +101,9 @@ function NewOpportunityForm(props) {
   };
 
   return (
-    <div className="container">
-
+    <div className="container pb-3 pt-3 card">
+      <h1>New Opportunity</h1>
+      <hr />
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Opportunity Name</label>
@@ -120,7 +121,7 @@ function NewOpportunityForm(props) {
           {/* Link to CreateContact Modal and set contact_id in Opportunity Form */}
           <div className="mb-3">
             <label className="form-label">Contact</label>
-            <Button className="mx-3" onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
+            <Button className="mx-3 btn-success" onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
           </div>
         </div>
         <div className="mb-3">
@@ -169,7 +170,7 @@ function NewOpportunityForm(props) {
           onChange={handleChange} />
           {validation.chance_of_winning === false && <div className="invalid-feedback">Please enter a valid percentage (0-100).</div>}
         </div>
-        <button type="submit" className="btn btn-primary">Create Opportunity</button>
+        <button type="submit" className="btn btn-success">Create Opportunity</button>
         <input type="hidden" name="user_id" value={user.id} />
         <input type="hidden" name="contact_id" value={1} />
       </form>

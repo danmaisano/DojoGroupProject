@@ -2,13 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Button, Form, FormControl, Dropdown, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Building, List, PersonFill, PersonRolodex, PlusCircle, Search, Speedometer } from 'react-bootstrap-icons';
 import './Layout.css';
 
 const Layout = ({ children, user, setUser }) => {
     const navigate = useNavigate();
+    const [pageTitle, setPageTitle] = useState('Dashboard');
+
+    // Define a function to check if a path is active
+    const location = useLocation();
+    const isActive = (path) => {
+        return location.pathname.startsWith(path);
+    };
+    // Define a function to get the class name for a link based on whether it is active or not
+    const getLinkClass = (path) => {
+        return isActive(path) ? 'active-link' : 'disabled-link';
+    };
 
     // Define the breakpoint for md (Bootstrap's default is 768px)
     const MD_BREAKPOINT = 768;
@@ -17,6 +28,24 @@ const Layout = ({ children, user, setUser }) => {
     const [showSidebar, setShowSidebar] = useState(window.innerWidth > MD_BREAKPOINT);
 
     useEffect(() => {
+            // Update the page title based on the current path
+        const currentPath = location.pathname;
+        if (currentPath.includes('dashboard')) {
+            setPageTitle('Dashboard');
+        } else if (currentPath.includes('company')) {
+            setPageTitle('Company Info');
+        } else if (currentPath.includes('newOpp')) {
+            setPageTitle('New Opportunity');  // Set title for Create New Opportunity page
+        } else if (currentPath.includes('contacts')) {
+            setPageTitle('Contacts');
+        } else if (currentPath.includes('profile')) {
+            setPageTitle('Profile');
+        } else if (currentPath.includes('activity')) {
+            setPageTitle('Activity Log');
+        } else if (currentPath.includes('view-opportunity')) {
+            setPageTitle('Opportunity Details');
+        }
+        
         // Function to toggle sidebar based on window width
         const handleResize = () => {
             setShowSidebar(window.innerWidth > MD_BREAKPOINT);
@@ -29,7 +58,7 @@ const Layout = ({ children, user, setUser }) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         axios
@@ -51,12 +80,13 @@ const Layout = ({ children, user, setUser }) => {
                         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setShowSidebar(!showSidebar)}>
                             <List />
                         </Navbar.Toggle>
-                        <Navbar.Brand href="#" className="mx-auto">Dojo CRM</Navbar.Brand>
+                        <Navbar.Brand href="#" className="mx-auto">{pageTitle}</Navbar.Brand>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ms-auto">
                                 <Dropdown className='Dropdown'>
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                        <PersonFill />
+                                        <PersonFill className="nav-icon" />
+                                        <span className='pe-3'>{user.first_name} {user.last_name}</span>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu className="text-right" style={{ right: 0, left: 'auto' }}>
                                         <Dropdown.Item href="/profile">Settings</Dropdown.Item>
@@ -76,32 +106,43 @@ const Layout = ({ children, user, setUser }) => {
                                 <div className="">
                                     <Nav className="flex-column fixed-sidebar" >
                                         <LinkContainer to="/dashboard">
-                                            <Nav.Link className=" align-items-center border-bottom border-secondary p-3">
-                                                <Speedometer className="nav-icon" /> 
-                                                Dashboard
+                                            <Nav.Link className={`align-items-center border-bottom border-secondary p-3 ${getLinkClass('/dashboard')}`} 
+                                                disabled={isActive('/dashboard')}>
+                                                <div className="d-flex align-items-center">
+                                                    <Speedometer className="nav-icon" /> 
+                                                    <span>Dashboard</span>
+                                                </div>
                                             </Nav.Link>
                                         </LinkContainer>
                                         <LinkContainer to={`/company/${user.company}`}>
-                                            <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
-                                                <Building className="nav-icon" /> 
-                                                Company Info
+                                            <Nav.Link className={` align-items-center border-bottom  border-secondary p-3 ${getLinkClass('/company')}`}
+                                                disabled={isActive('/company/')}>
+                                                <div className="d-flex align-items-center">
+                                                    <Building className="nav-icon" /> 
+                                                    <span>Company Info</span>
+                                                </div>
                                             </Nav.Link>
                                         </LinkContainer>
                                         
                                         <LinkContainer to="/newOpp">
-                                            <Nav.Link className=" align-items-center border-bottom  border-secondary p-3">
-                                                <PlusCircle className="nav-icon" />
-                                                Create New Opportunity
+                                            <Nav.Link className={` align-items-center border-bottom  border-secondary p-3 ${getLinkClass('/newOpp')}`}
+                                                disabled={isActive('/newOpp')}>
+                                                <div className="d-flex align-items-center">
+                                                    <PlusCircle className="nav-icon" />
+                                                    <span>Create New Opportunity</span>
+                                                </div>
                                             </Nav.Link>
                                         </LinkContainer>
                                         
                                         <LinkContainer to="/contacts">
-                                            <Nav.Link className=" align-items-center border-secondary p-3">
-                                                <PersonRolodex className="nav-icon" />
-                                                Contacts
+                                            <Nav.Link className={` align-items-center border-bottom  border-secondary p-3 ${getLinkClass('/contacts')}`}
+                                                disabled={isActive('/contacts')}>
+                                                <div className="d-flex align-items-center">
+                                                    <PersonRolodex className="nav-icon" />
+                                                    <span>Contacts</span>
+                                                </div>
                                             </Nav.Link>
                                         </LinkContainer>
-                                        {/* ... other links ... */}
                                     </Nav>
                                 </div>
                             </Col>
@@ -117,7 +158,6 @@ const Layout = ({ children, user, setUser }) => {
                         </Col>
                     </Row>
                 </Container>
-
             </>
         )}
         <footer className="footer mt-auto py-3 bg-dark vh-10 border-top border-light w-100">

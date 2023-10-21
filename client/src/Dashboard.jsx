@@ -15,7 +15,8 @@ function Dashboard(props) {
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
 
-  // Pagination state
+
+  //## START Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Define the number of items per page
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -31,6 +32,9 @@ function Dashboard(props) {
   const handleChangeItemsPerPage = (newItemsPerPage) => {
     setItemsPerPage(newItemsPerPage);
   };
+  //## END Pagination
+
+
 
   // State for the contact modal
   const [showContactModal, setShowContactModal] = useState(false);
