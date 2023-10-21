@@ -22,8 +22,7 @@ const loginUser = (email, password, setUser, navigate) => {
         role: decodedToken.role,
       });
       // console.log(userData) 
-      console.log(userData)
-      Cookies.set("userData", JSON.stringify(userData), { expires: 3000 });
+      Cookies.set("userData", JSON.stringify(userData), { expires: 30 });
       setUser(userData);
       if (userData.role == "superAdmin"){
         navigate("/superAdminDashboard")

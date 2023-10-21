@@ -41,7 +41,6 @@ useEffect(() => {
   };
 
   const handleUserBlur = (id, field) => {
-    console.log(field)
     const userToUpdate = users.find((u) => u.id === id);
     if(user.id == id && userToUpdate.role !== "admin"){
       console.log("can't make yourself a non-admin") 

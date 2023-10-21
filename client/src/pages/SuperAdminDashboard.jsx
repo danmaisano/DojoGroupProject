@@ -31,9 +31,8 @@ function SuperAdminDashboard(props) {
   
   return (
     <div className="container card pb-3 pt-3">
-      <h1>Super Admin Dashboard</h1>
+      <h1>List of All Companies</h1>
       <hr></hr>
-      <h3>List of All Companies</h3>
       <div className="table-responsive mt-3">
         <Table className="table" striped bordered hover variant="dark">
           <thead>
