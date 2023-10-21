@@ -9,5 +9,6 @@ router.post("/", verifyUser, checkPermission('createOwn', 'company'), companyCon
 router.get("/:id", verifyUser, checkPermission('readOwn', 'company'), companyController.getCompany);
 router.put("/:id", verifyUser, checkPermission('updateOwn','company'), companyController.updateCompany);
 router.delete("/:id", verifyUser, checkPermission('deleteOwn','company'), companyController.deleteCompany);
+router.get("/companies/all", verifyUser, checkPermission('readAny', 'company'), companyController.getAllCompanies)
 
 export default router;
