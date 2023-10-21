@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import loginUser from './components/loginUser';
+import loginUser from '../components/loginUser';
 
 const Register = (props) => {
     const { user, setUser } = props;

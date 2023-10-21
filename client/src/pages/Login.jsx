@@ -3,7 +3,7 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from "js-cookie";
-import loginUser from './components/loginUser';
+import loginUser from '../components/loginUser';
 
 const Login = (props) => {
   const { user, setUser } = props;

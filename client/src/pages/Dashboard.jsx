@@ -3,9 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Modal, Button, Table } from 'react-bootstrap';
-import NewOpportunityForm from "./components/NewOpp";
-import ContactModal from "./components/Contacts/ContactCard";
-import NewContactModal from './components/Contacts/CreateContact';
+import NewOpportunityForm from "../components/NewOpp";
+import ContactModal from "../components/Contacts/ContactCard";
+import NewContactModal from '../components/Contacts/CreateContact';
 
 
 function Dashboard(props) {
