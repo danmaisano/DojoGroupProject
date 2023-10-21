@@ -21,11 +21,15 @@ function Dashboard(props) {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const totalItems = opportunities.length;
-  
+
   const itemsToDisplay = opportunities.slice(startIndex, endIndex);
-    
+
   const handlePageChange = (pageNumber) => {
-      setCurrentPage(pageNumber);
+    setCurrentPage(pageNumber);
+  };
+
+  const handleChangeItemsPerPage = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
   };
 
   // State for the contact modal
@@ -340,6 +344,7 @@ function Dashboard(props) {
           totalItems={opportunities.length}
           currentPage={currentPage}
           paginate={handlePageChange}
+          changeItemsPerPage={handleChangeItemsPerPage}
         />
       </div>
       {contactModals}

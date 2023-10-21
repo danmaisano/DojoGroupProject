@@ -8,6 +8,12 @@ function Pagination({
     changeItemsPerPage,
 }) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const handleItemsPerPageChange = (event) => {
+        const newItemsPerPage = parseInt(event.target.value, 10);
+        changeItemsPerPage(newItemsPerPage);
+    };
+
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
