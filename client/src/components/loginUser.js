@@ -22,11 +22,15 @@ const loginUser = (email, password, setUser, navigate) => {
         role: decodedToken.role,
       });
       // console.log(userData) 
-
+      console.log(userData)
       Cookies.set("userData", JSON.stringify(userData), { expires: 3000 });
       setUser(userData);
-
-      navigate("/dashboard");
+      if (userData.role == "superAdmin"){
+        navigate("/superAdminDashboard")
+      }
+      else{
+        navigate("/dashboard");
+      }
     })
     .catch((err) => {
       console.error("Login failed", err);

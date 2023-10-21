@@ -11,6 +11,7 @@ import CompanyDetails from './pages/CompanyDetails'
 import ContactCard from './components/Contacts/ContactCard'
 import ViewOpportunity from './pages/ViewOpportunity'
 import ContactsList from './components/Contacts/ContactsList'
+import SuperAdminDashboard from './pages/SuperAdminDashboard'
 
 function App() {
   const [user, setUser] = useState({});
@@ -37,6 +38,8 @@ function App() {
           <Route path="/newOpp" element={<NewOpportunityForm user={user} setUser={setUser} />} />
           <Route path="/view-opportunity/:id" element={<ViewOpportunity />} />
           <Route path="/contacts" element={<ContactsList user={user} setUser={setUser} />} />
+          <Route path="/superAdminDashboard" element={<SuperAdminDashboard user={user} setUser={setUser} />} />
+  
           {/* <Route path="/test" element={<ContactCard user={user} setUser={setUser} />} /> */}
         </Route>
       </Routes>

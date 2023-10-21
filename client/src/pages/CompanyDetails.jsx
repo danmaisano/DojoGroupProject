@@ -10,7 +10,9 @@ function CompanyDetails(props) {
   const [users, setUsers] = useState([]);
   const [editing, setEditing] = useState({});
   const [company, setCompany] = useState({})
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
   
 useEffect(() => {
   axios
@@ -92,9 +94,20 @@ useEffect(() => {
   const handleUserRoleChange = (e, id) => {
     const newRole = e.target.value;
     const userToUpdate = users.find((u) => u.id === id);
-    userToUpdate.role = newRole;
-    handleUserBlur(id, "role");
+  
+    const updatedUsers = users.map((u) => (u.id === id ? { ...u, role: newRole } : u));
+    
+    const adminCount = updatedUsers.reduce((count, u) => (u.role === 'admin' ? count + 1 : count), 0);
+  
+    if (adminCount > 0) {
+      userToUpdate.role = newRole;
+      handleUserBlur(id, 'role');
+      setErrorMessage("");  // Clear any existing error messages
+    } else {
+      setErrorMessage("There must be at least one admin.");
+    }
   };
+  
 
   return (
     <div className="container card pb-3 pt-3">
@@ -163,9 +176,23 @@ useEffect(() => {
             </Table>
           </div>
         </div>
+        <div className="position-relative mb-5">
+        {errorMessage && 
+          <div className="text-danger alert position-absolute">
+            {errorMessage}
+          </div>
+        }
+      </div>
       <hr />
       <div className='d-flex justify-content-left'>
         <Link to="/addAUser" className="btn btn-success m-1">Add a User</Link>
+      </div>
+      <div>
+        {user.role === "superAdmin" ? (
+          <Link to="/superAdminDashboard" className="btn btn-primary m-1 mt-5">
+            Back to Super Admin Dashboard
+          </Link>
+        ) : null}
       </div>
     </div>
   );
