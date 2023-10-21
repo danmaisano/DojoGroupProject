@@ -6,6 +6,7 @@ import { Modal, Button } from 'react-bootstrap';
 import NewOpportunityForm from "./components/NewOpp";
 import ContactModal from "./components/Contacts/ContactCard";
 import NewContactModal from './components/Contacts/CreateContact';
+import Pagination from "./components/UI/Pagination";
 
 
 function Dashboard(props) {
@@ -14,6 +15,18 @@ function Dashboard(props) {
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Define the number of items per page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const totalItems = opportunities.length;
+  
+  const itemsToDisplay = opportunities.slice(startIndex, endIndex);
+    
+  const handlePageChange = (pageNumber) => {
+      setCurrentPage(pageNumber);
+  };
 
   // State for the contact modal
   const [showContactModal, setShowContactModal] = useState(false);
@@ -45,41 +58,41 @@ function Dashboard(props) {
   const openCreateContactModal = (oppId) => {  // Receive oppId and selectedContact
     const modalId = Date.now(); // Generate a unique ID for the modal
     const contactModal = (
-        <NewContactModal
-            user={user}
-            show={true}
-            handleClose={() => closeContactModal(modalId, closeContactModal)}
-            afterSubmit={(contactId) => {
-              setShowContactModal(false); // Close the modal
-              window.location.reload(); // Refresh the page
-  
-              // Add contact ID to the opportunity represented by oppId
-              axios.put(`http://localhost:8081/opportunities/${oppId}`, { contact_id: contactId }, {
-                withCredentials: true
-              })
-              .then(() => {
-                // Update the state to reflect the changes
-                setOpportunities((opportunities) => {
-                  return opportunities.map((opportunity) => {
-                    if (opportunity.id === oppId) {
-                      return {
-                        ...opportunity,
-                        contact_id: contactId,
-                      };
-                    } else {
-                      return opportunity;
-                    }
-                  });
+      <NewContactModal
+        user={user}
+        show={true}
+        handleClose={() => closeContactModal(modalId, closeContactModal)}
+        afterSubmit={(contactId) => {
+          setShowContactModal(false); // Close the modal
+          window.location.reload(); // Refresh the page
+
+          // Add contact ID to the opportunity represented by oppId
+          axios.put(`http://localhost:8081/opportunities/${oppId}`, { contact_id: contactId }, {
+            withCredentials: true
+          })
+            .then(() => {
+              // Update the state to reflect the changes
+              setOpportunities((opportunities) => {
+                return opportunities.map((opportunity) => {
+                  if (opportunity.id === oppId) {
+                    return {
+                      ...opportunity,
+                      contact_id: contactId,
+                    };
+                  } else {
+                    return opportunity;
+                  }
                 });
-              })
-              .catch((err) => console.log(err));
-            }}
-        />
+              });
+            })
+            .catch((err) => console.log(err));
+        }}
+      />
     );
     setContactModals((modals) => [...modals, contactModal]);
     contactModalsRefs[modalId] = contactModal;
   };
-  
+
 
   useEffect(() => {
     if (user && user.company) {
@@ -185,9 +198,6 @@ function Dashboard(props) {
       .catch((err) => console.log(err));
   };
 
-
-
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.target.blur();
@@ -215,7 +225,6 @@ function Dashboard(props) {
       })
       .catch((err) => console.log(err));
   };
-  
 
   return (
     <div className="container">
@@ -243,17 +252,17 @@ function Dashboard(props) {
       <div className="table-responsive">
         <table className="table">
           <thead>
-          <tr>
-            <th className="text-center">Opportunity Name</th>
-            <th className="text-center">Prospect Name</th>
-            <th className="text-center">Potential Revenue</th>
-            <th className="text-center">Chance of Winning (%)</th>
-            <th className="text-center">Status</th>
-            <th className="text-center">Actions</th>
-          </tr>
+            <tr>
+              <th className="text-center">Opportunity Name</th>
+              <th className="text-center">Prospect Name</th>
+              <th className="text-center">Potential Revenue</th>
+              <th className="text-center">Chance of Winning (%)</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Actions</th>
+            </tr>
           </thead>
           <tbody>
-            {opportunities.map((opp, index) => {
+            {itemsToDisplay.map((opp, index) => {
               // console.log("Opportunity object:", opp);
               return (
                 <tr key={opp.id}>
@@ -310,7 +319,7 @@ function Dashboard(props) {
                   <td className="text-center">
                     <button
                       className="btn btn-warning btn-sm me-4"
-                      onClick={() => navigate(`/view-opportunity/${opp.id}`)} 
+                      onClick={() => navigate(`/view-opportunity/${opp.id}`)}
                     >
                       View
                     </button>
@@ -326,10 +335,15 @@ function Dashboard(props) {
             })}
           </tbody>
         </table>
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          totalItems={opportunities.length}
+          currentPage={currentPage}
+          paginate={handlePageChange}
+        />
       </div>
       {contactModals}
     </div>
   );
-}
-
+};
 export default Dashboard;
