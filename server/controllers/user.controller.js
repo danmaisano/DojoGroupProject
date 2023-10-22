@@ -85,7 +85,7 @@
             role: newUser.role,
           },
           JWT_SECRET,
-          { expiresIn: "1h" }
+          { expiresIn: "30d" }
         );
         res.cookie("token", token);
 
@@ -151,7 +151,7 @@
             role: user.role,
           },
           JWT_SECRET,
-          { expiresIn: "1h" }
+          { expiresIn: "30d" }
         );
 
         res.cookie("token", token, { httpOnly: true });

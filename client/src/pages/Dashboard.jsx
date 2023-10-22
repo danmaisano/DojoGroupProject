@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { Modal, Button, Table } from 'react-bootstrap';
+import { Modal, Button, Table, Nav} from 'react-bootstrap';
+import { LinkContainer } from "react-router-bootstrap";
 import NewOpportunityForm from "../components/NewOpp";
 import ContactModal from "../components/Contacts/ContactCard";
 import NewContactModal from '../components/Contacts/CreateContact';
@@ -13,6 +14,7 @@ function Dashboard(props) {
   const [opportunities, setOpportunities] = useState([]);
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
+  const token = Cookies.get("token");
 
 
   // State for the contact modal
@@ -82,6 +84,7 @@ function Dashboard(props) {
   
 
   useEffect(() => {
+
     if (user && user.company) {
       // Use Promise.all to make both API calls in parallel
       Promise.all([
@@ -149,7 +152,7 @@ function Dashboard(props) {
       }
     }
 
-    const token = Cookies.get("token");
+    // const token = Cookies.get("token");
 
     axios
       .put(
@@ -309,11 +312,15 @@ function Dashboard(props) {
         </Table>
       </div>
       <hr></hr> 
-      <div className='d-flex justify-content-left'>
-        <Button variant="success" href="/newOpp" >
-          Create New Opportunity
-        </Button>
-      </div>
+      <LinkContainer to="/newOpp">
+        <Nav.Link className="p-0">
+          <Button variant="primary" className="align-items-center">
+            <div className="d-flex align-items-center">
+              <span>Create Opportunity</span>
+            </div>
+          </Button>
+        </Nav.Link>
+      </LinkContainer>
       <Modal show={showModal} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
         </Modal.Header>

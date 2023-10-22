@@ -161,7 +161,7 @@ const Layout = ({ children, user, setUser }) => {
                         >
                           <div className="d-flex align-items-center">
                             <PlusCircle className="nav-icon mx-2" />
-                            <span>Create New Opportunity</span>
+                            <span>Create Opportunity</span>
                           </div>
                         </Nav.Link>
                       </LinkContainer>

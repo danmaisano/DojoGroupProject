@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 function NewOpportunityForm(props) {
   const { user, afterSubmit } = props;
+  console.log('user from newopp', user)
   console.log("Initial value of user: ", user);
   const [formData, setFormData] = useState({
     opportunity_name: '',
