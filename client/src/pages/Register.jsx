@@ -57,8 +57,8 @@ const Register = (props) => {
         
         axios.post('http://localhost:8081/users/register', formData)
             .then(res => {
-                console.log(res);
-                console.log("Registration successful");
+                // console.log(res);
+                // console.log("Registration successful");
                 loginUser(formData.email, formData.password, setUser, navigate);
             })
             .catch(err => console.log(err));

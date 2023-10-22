@@ -8,6 +8,7 @@ import checkPermission from "../middleware/checkPermission.js";
 
 router.get("/", verifyUser, checkPermission('readOwn','company'), userController.getHome);
 router.post("/register", userController.register);
+router.post("/createUser", userController.createUser);
 router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/:company_id", verifyUser, checkPermission('readOwn','company'), userController.getAllUsersByCompany);

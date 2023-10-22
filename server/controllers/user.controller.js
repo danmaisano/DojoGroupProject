@@ -100,6 +100,30 @@
       }
     },
 
+    createUser: async (req, res) => {
+        try {
+          console.log('Received request body:', req.body);
+
+        const newUser = await User.create({
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+          company_id: req.body.company_id,
+          role: req.body.role,
+          password: req.body.password 
+        });
+        console.log("new user:", newUser)
+
+        return res.json({
+          message: "Creation successful",
+        });
+      } catch (error) {
+        console.error("Error occurred during registration:", error);
+        return res.status(500).json({ error: "Registration failed" });
+      }
+    },
+
+
     login: async (req, res) => {
       try {
         const { email, password } = req.body;
