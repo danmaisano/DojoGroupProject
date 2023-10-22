@@ -102,9 +102,7 @@
 
     createUser: async (req, res) => {
         try {
-          console.log('Received request body:', req.body);
-
-        const newUser = await User.create({
+          const newUser = await User.create({
           first_name: req.body.first_name,
           last_name: req.body.last_name,
           email: req.body.email,
@@ -112,8 +110,7 @@
           role: req.body.role,
           password: req.body.password 
         });
-        console.log("new user:", newUser)
-
+        
         return res.json({
           message: "Creation successful",
         });

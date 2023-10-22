@@ -56,7 +56,7 @@ const NewUserModal = (props) => {
       return;
     }
     formData.company_id = company.id;
-    axios.post('http://localhost:8081/users/createUser', formData)
+    axios.post('http://localhost:8081/users/createUser', formData, {withCredentials: true})
     .then(res => {
       if (props.onNewUserAdded) {
         props.onNewUserAdded(res.data.newUser); 

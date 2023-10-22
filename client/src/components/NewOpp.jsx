@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import NewContactModal from './Contacts/CreateContact';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import NewContactModal from "./Contacts/CreateContact";
 import Cookies from "js-cookie";
-
 
 function NewOpportunityForm(props) {
   const { user, afterSubmit } = props;
-  console.log('user from newopp', user)
+  console.log("user from newopp", user);
   console.log("Initial value of user: ", user);
   const [formData, setFormData] = useState({
-    opportunity_name: '',
-    opportunity_address: '', // need to set to empty when live
+    opportunity_name: "",
+    opportunity_address: "", // need to set to empty when live
     pot_rev: 0, // need to set to empty when live
     chance_of_winning: 10, // need to set to empty when live
-    status: 'identified', // most likely the default value and also the first in the list.
+    status: "identified", // most likely the default value and also the first in the list.
     user_id: user.id,
   });
 
@@ -26,9 +25,9 @@ function NewOpportunityForm(props) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
     validateField(name, value);
   };
@@ -36,16 +35,17 @@ function NewOpportunityForm(props) {
   const handleSubmit = (e) => {
     // console.log(formData)
     e.preventDefault();
-    axios.post('http://localhost:8081/opportunities/create', formData, {
-      withCredentials: true
-    })
-      .then(res => {
+    axios
+      .post("http://localhost:8081/opportunities/create", formData, {
+        withCredentials: true,
+      })
+      .then((res) => {
         console.log("Opportunity created: ", res.data);
         if (afterSubmit) afterSubmit();
         navigate("/dashboard");
       })
-      .catch(err => console.log(err));
-      console.log("handleSubmit .catch: ", formData);
+      .catch((err) => console.log(err));
+    console.log("handleSubmit .catch: ", formData);
   };
 
   // Handle Adding a Contact
@@ -66,18 +66,18 @@ function NewOpportunityForm(props) {
     opportunity_address: null,
     pot_rev: null,
     chance_of_winning: null,
-    status: null
+    status: null,
   });
 
   const validateField = (name, value) => {
     let valid = null;
-    if (value === '') {
+    if (value === "") {
       valid = false;
     } else {
       valid = true;
     }
 
-    if (name === 'chance_of_winning') {
+    if (name === "chance_of_winning") {
       const numberValue = Number(value);
       if (isNaN(numberValue) || numberValue < 0 || numberValue > 100) {
         valid = false;
@@ -86,7 +86,7 @@ function NewOpportunityForm(props) {
       }
     }
 
-    if (name === 'pot_rev') {
+    if (name === "pot_rev") {
       const numberValue = Number(value);
       if (isNaN(numberValue) || numberValue < 0 || numberValue > 10000000000) {
         valid = false;
@@ -95,9 +95,9 @@ function NewOpportunityForm(props) {
       }
     }
 
-    setValidation(prevState => ({
+    setValidation((prevState) => ({
       ...prevState,
-      [name]: valid
+      [name]: valid,
     }));
   };
 
@@ -107,48 +107,85 @@ function NewOpportunityForm(props) {
       <hr />
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Opportunity Name</label>
-          <input 
-            type="text" 
-            name="opportunity_name" 
-            className={`form-control ${validation.opportunity_name === false ? 'is-invalid' : ''}`} 
-            required 
-            value={formData.opportunity_name} 
-            onChange={handleChange} 
+          <label className="form-label" htmlFor="opportunity_name">
+            Opportunity Name
+          </label>
+          <input
+            type="text"
+            id="opportunity_name"
+            name="opportunity_name"
+            className={`form-control ${
+              validation.opportunity_name === false ? "is-invalid" : ""
+            }`}
+            required
+            value={formData.opportunity_name}
+            onChange={handleChange}
           />
-          {validation.opportunity_name === false && <div className="invalid-feedback">Required</div>}
+          {validation.opportunity_name === false && (
+            <div className="invalid-feedback">Required</div>
+          )}
         </div>
         <div className="mb-3">
           {/* Link to CreateContact Modal and set contact_id in Opportunity Form */}
           <div className="mb-3">
-            <label className="form-label">Contact</label>
-            <Button className="mx-3 btn-success" onClick={() => setShowContactModal(true)}>Create or Select Contact</Button>
+            <label className="form-label" htmlFor="contact">
+              Contact{" "}
+            </label>
+            <Button
+              className="mx-3 btn-success"
+              id="contact"
+              name="contact"
+              onClick={() => setShowContactModal(true)}
+            >
+              Create or Select Contact
+            </Button>
           </div>
         </div>
         <div className="mb-3">
-          <label className="form-label">Opportunity Address</label>
-          <input 
-            type="text" 
-            name="opportunity_address" 
-            className={`form-control ${validation.opportunity_address === false ? 'is-invalid' : ''}`}
-            value={formData.opportunity_address} 
-            onChange={handleChange} />
-          {validation.opportunity_address === false && <div className="invalid-feedback">Required</div>}
+          <label className="form-label" htmlFor="opportunity_address">
+            Opportunity Address
+          </label>
+          <input
+            type="text"
+            id="opportunity_address"
+            name="opportunity_address"
+            className={`form-control ${
+              validation.opportunity_address === false ? "is-invalid" : ""
+            }`}
+            value={formData.opportunity_address}
+            onChange={handleChange}
+          />
+          {validation.opportunity_address === false && (
+            <div className="invalid-feedback">Required</div>
+          )}
         </div>
         <div className="mb-3">
-          <label className="form-label">Potential Revenue</label>
-          <input 
-            type="number" 
-            name="pot_rev" 
-            className={`form-control ${validation.pot_rev=== false ? 'is-invalid' : ''}`}
-            value={formData.pot_rev} 
-            onChange={handleChange} />
-            {validation.pot_rev === false && <div className="invalid-feedback">Please enter a number bewteen (0-10000000000).</div>}
+          <label className="form-label" htmlFor="pot_rev">
+            Potential Revenue
+          </label>
+          <input
+            type="number"
+            name="pot_rev"
+            id="pot_rev"
+            className={`form-control ${
+              validation.pot_rev === false ? "is-invalid" : ""
+            }`}
+            value={formData.pot_rev}
+            onChange={handleChange}
+          />
+          {validation.pot_rev === false && (
+            <div className="invalid-feedback">
+              Please enter a number bewteen (0-10000000000).
+            </div>
+          )}
         </div>
         <div className="mb-3">
-          <label className="form-label">Status</label>
+          <label className="form-label" htmlFor="status">
+            Status
+          </label>
           <select
             name="status"
+            id="status"
             className="form-control"
             value={formData.status}
             onChange={handleChange}
@@ -163,15 +200,28 @@ function NewOpportunityForm(props) {
           </select>
         </div>
         <div className="mb-3">
-          <label className="form-label">Chance of Winning (%)</label>
-          <input type="number" 
-          name="chance_of_winning" 
-          className={`form-control ${validation.chance_of_winning === false ? 'is-invalid' : ''}`}
-          value={formData.chance_of_winning} 
-          onChange={handleChange} />
-          {validation.chance_of_winning === false && <div className="invalid-feedback">Please enter a valid percentage (0-100).</div>}
+          <label className="form-label" htmlFor="chance_of_winning">
+            Chance of Winning (%)
+          </label>
+          <input
+            type="number"
+            id="chance_of_winning"
+            name="chance_of_winning"
+            className={`form-control ${
+              validation.chance_of_winning === false ? "is-invalid" : ""
+            }`}
+            value={formData.chance_of_winning}
+            onChange={handleChange}
+          />
+          {validation.chance_of_winning === false && (
+            <div className="invalid-feedback">
+              Please enter a valid percentage (0-100).
+            </div>
+          )}
         </div>
-        <button type="submit" className="btn btn-success">Create Opportunity</button>
+        <button type="submit" className="btn btn-success">
+          Create Opportunity
+        </button>
         <input type="hidden" name="user_id" value={user.id} />
         <input type="hidden" name="contact_id" value={1} />
       </form>
@@ -184,7 +234,6 @@ function NewOpportunityForm(props) {
         user={user}
         setFormData={setFormData}
       />
-
     </div>
   );
 }

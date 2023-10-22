@@ -43,7 +43,6 @@ const contactController = {
     // Get all contacts by company ID
     getAllContactsByCompany: async (req, res) => {
         try {
-            console.log(req.params.id);
             const contacts = await Contact.findAll({
                 where: { company_id: req.params.id },
             });
