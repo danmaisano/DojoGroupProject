@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams} from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Cookies from "js-cookie";
+import NewUserModal from "../components/NewUserModal";
 
 function CompanyDetails(props) {
   const { user, setUser } = props;
@@ -11,8 +12,8 @@ function CompanyDetails(props) {
   const [editing, setEditing] = useState({});
   const [company, setCompany] = useState({})
   const [errorMessage, setErrorMessage] = useState("");
+  const [showUserModal, setShowUserModal] = useState(false);
   const navigate = useNavigate();
-
   
 useEffect(() => {
   axios
@@ -107,6 +108,22 @@ useEffect(() => {
     }
   };
   
+  const handleUserModalClose = () => setShowUserModal(false);
+  const handleUserModalShow = () => setShowUserModal(true);
+
+  const fetchUsers = () => {
+    axios
+      .get(`http://localhost:8081/users/${id}`, { withCredentials: true })
+      .then((res) => {
+        setUsers(res.data.users);
+      })
+      .catch((err) => console.log(err));
+  };
+  
+  useEffect(() => {
+    fetchUsers();
+  }, [id]);
+
 
   return (
     <div className="container card pb-3 pt-3">
@@ -184,7 +201,8 @@ useEffect(() => {
       </div>
       <hr />
       <div className='d-flex justify-content-left'>
-        <Link to="/addAUser" className="btn btn-success m-1">Add a User</Link>
+        <button className="btn btn-success" onClick={handleUserModalShow}>Add a User</button>
+
       </div>
       <div>
         {user.role === "superAdmin" ? (
@@ -192,6 +210,12 @@ useEffect(() => {
             Back to Super Admin Dashboard
           </Link>
         ) : null}
+        <NewUserModal
+          show={showUserModal}
+          handleClose={handleUserModalClose}
+          company={company}
+          fetchUsers={fetchUsers}
+        />
       </div>
     </div>
   );
