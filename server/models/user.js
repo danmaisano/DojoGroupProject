@@ -58,11 +58,11 @@ User.init(
         len: [1, 100],
       },
     },
-    verified: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
+    // verified: {
+    //   type: DataTypes.BOOLEAN,
+    //   allowNull: false,
+    //   defaultValue: false,
+    // },
   },
   
   {
