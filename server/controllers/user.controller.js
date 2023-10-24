@@ -7,9 +7,10 @@ import { OAuth2Client as GoogleOAuth2Client } from "google-auth-library";
 
 import fs from "fs";
 
+
 const credentials = JSON.parse(
   fs.readFileSync(
-    "C:/Users/danma/DojoGroupProject/server/credentials.json",
+    "./credentials.json",
     "utf8"
   )
 );
@@ -35,8 +36,21 @@ OAuth2Client.setCredentials({
   expiry_date: "3599",
 });
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: "danmaisano@gmail.com",
+    clientId: client_id,
+    clientSecret: client_secret,
+    refreshToken: process.env.REFRESH_TOKEN,
+    accessToken: process.env.ACCESS_TOKEN,
+  },
+});
 const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
+
+
 
 const userController = {
   getHome: (req, res) => {
@@ -117,17 +131,17 @@ const userController = {
       // console.log("verification token:", verificationToken)
 
       // Testing with gmail:
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          type: "OAuth2",
-          user: "danmaisano@gmail.com",
-          clientId: client_id,
-          clientSecret: client_secret,
-          refreshToken: process.env.REFRESH_TOKEN,
-          accessToken: process.env.ACCESS_TOKEN,
-        },
-      });
+      // const transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     type: "OAuth2",
+      //     user: "danmaisano@gmail.com",
+      //     clientId: client_id,
+      //     clientSecret: client_secret,
+      //     refreshToken: process.env.REFRESH_TOKEN,
+      //     accessToken: process.env.ACCESS_TOKEN,
+      //   },
+      // });
 
       //For 365
       //   const transporter = nodemailer.createTransport({
@@ -143,11 +157,12 @@ const userController = {
       //         ciphers: 'SSLv3'
       //     }
       // });
+
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
-        subject: "Verify your email for Kizer",
-        html: `<p><a href="http://localhost:5173/users/verify/${verificationToken}">Click to verify your email, or some shit</a></p>`,
+        subject: "Verify your email",
+        text: `Click on the link to verify your email: http://localhost:8081/users/verify/${verificationToken}`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -211,7 +226,7 @@ const userController = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
         subject: "Verify your email",
-        text: `Click on the link to verify your email: http://localhost:5173/users/verify/${verificationToken}`,
+        text: `Click on the link to verify your email: http://localhost:8081/users/verify/${verificationToken}`,
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
