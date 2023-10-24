@@ -14,7 +14,6 @@ const credentials = JSON.parse(
     "utf8"
   )
 );
-console.log("Credentials: ", credentials);
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 const verificationToken = "your_verification_token_here";
@@ -161,8 +160,8 @@ const userController = {
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
-        subject: "Verify your email",
-        text: `Click on the link to verify your email: http://localhost:8081/users/verify/${verificationToken}`,
+        subject: "Verify your email for Kizer",
+        html: `<p><a href="http://localhost:8081/users/verify/${verificationToken}">Click to verify your email, or some shit</a></p>`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -195,18 +194,17 @@ const userController = {
         { expiresIn: "1h" }
       );
       //Testing with gmail:
-      // const transporter = nodemailer.createTransport({
-      //   service: 'gmail',
-      //   auth: {
-      //     user: process.env.EMAIL_USERNAME,
-      //     pass: process.env.EMAIL_PASSWORD
-      //   },
-      //   secure: false,
-      //   requireTLS: true,
-      //   tls: {
-      //     rejectUnauthorized: false
-      //   }
-      // });
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: "danmaisano@gmail.com",
+          clientId: client_id,
+          clientSecret: client_secret,
+          refreshToken: process.env.REFRESH_TOKEN,
+          accessToken: process.env.ACCESS_TOKEN,
+        },
+      });
 
       //   const transporter = nodemailer.createTransport({
       //     service: 'Outlook365',
@@ -246,10 +244,8 @@ const userController = {
   },
 
   verifyEmail: async (req, res) => {
-    console.log("HELLLLLLLOOOOOOOOOOOO")
     try {
       const verificationToken = req.params.token;
-      console.log(verificationToken)
       // Decode the token
       const decodedToken = jwt.verify(
         verificationToken,
