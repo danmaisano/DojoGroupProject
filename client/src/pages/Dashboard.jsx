@@ -259,14 +259,14 @@ function Dashboard(props) {
       <h4 className="my-3">Current Opportunities</h4>
       <div className="table-responsive">
         <table className="table mb-0">
-          <thead className="bg-dark">
+          <thead>
             <tr>
-              <th className="text-center">Opportunity Name</th>
-              <th className="text-center">Prospect Name</th>
-              <th className="text-center">Potential Revenue</th>
-              <th className="text-center">Chance of Winning (%)</th>
-              <th className="text-center">Status</th>
-              <th className="text-center">Actions</th>
+              <th className="text-body text-center">Opportunity Name</th>
+              <th className="text-body text-center">Prospect Name</th>
+              <th className="text-body text-center">Potential Revenue</th>
+              <th className="text-body text-center">Chance of Winning (%)</th>
+              <th className="text-body text-center">Status</th>
+              <th className="text-body text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -280,7 +280,7 @@ function Dashboard(props) {
                     "pot_rev",
                     "chance_of_winning",
                   ].map((field, i) => (
-                    <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)} className="text-center">
+                    <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)} className="text-body text-center">
                       {editing.id === opp.id && editing.field === field ? (
                         <input
                           value={opp[field]}
