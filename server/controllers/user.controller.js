@@ -1,8 +1,39 @@
-import User from "../models//user.js";
-import Company from "../models//company.js";
+import User from "../models/user.js";
+import Company from "../models/company.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { OAuth2Client as GoogleOAuth2Client } from "google-auth-library";
+
+import fs from "fs";
+
+const credentials = JSON.parse(
+  fs.readFileSync(
+    "C:/Users/danma/DojoGroupProject/server/credentials.json",
+    "utf8"
+  )
+);
+console.log("Credentials: ", credentials);
+
+const { client_secret, client_id, redirect_uris } = credentials.web;
+const verificationToken = "your_verification_token_here";
+const baseRedirectUri = credentials.web.redirect_uris[0];
+const actualRedirectUri = baseRedirectUri.replace(
+  "${verificationToken}",
+  verificationToken
+);
+
+const OAuth2Client = new GoogleOAuth2Client(
+  client_id,
+  client_secret,
+  actualRedirectUri
+);
+
+OAuth2Client.setCredentials({
+  refresh_token: process.env.REFRESH_TOKEN,
+  access_token: process.env.ACCESS_TOKEN,
+  expiry_date: "3599",
+});
 
 const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -83,33 +114,42 @@ const userController = {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
+      // console.log("verification token:", verificationToken)
+
       // Testing with gmail:
       const transporter = nodemailer.createTransport({
-        service: "gmail", // Use your preferred email service
+        service: "gmail",
         auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
+          type: "OAuth2",
+          user: "danmaisano@gmail.com",
+          clientId: client_id,
+          clientSecret: client_secret,
+          refreshToken: process.env.REFRESH_TOKEN,
+          accessToken: process.env.ACCESS_TOKEN,
         },
       });
-    //   const transporter = nodemailer.createTransport({
-    //     service: 'Outlook365', 
-    //     host: 'smtp.office365.com',
-    //     port: 587,
-    //     secure: false,  // use STARTTLS
-    //     auth: {
-    //         user: process.env.EMAIL_USERNAME,
-    //         pass: process.env.EMAIL_PASSWORD,
-    //     },
-    //     tls: {
-    //         ciphers: 'SSLv3'
-    //     }
-    // });
+
+      //For 365
+      //   const transporter = nodemailer.createTransport({
+      //     service: 'Outlook365',
+      //     host: 'smtp.office365.com',
+      //     port: 587,
+      //     secure: false,  // use STARTTLS
+      //     auth: {
+      //         user: process.env.EMAIL_USERNAME,
+      //         pass: process.env.EMAIL_PASSWORD,
+      //     },
+      //     tls: {
+      //         ciphers: 'SSLv3'
+      //     }
+      // });
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
-        subject: "Verify your email",
-        text: `Click on the link to verify your email: http://localhost:5173/users/verify/${verificationToken}`,
+        subject: "Verify your email for Kizer",
+        html: `<p><a href="http://localhost:5173/users/verify/${verificationToken}">Click to verify your email, or some shit</a></p>`,
       };
+
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log(error);
@@ -117,27 +157,6 @@ const userController = {
           console.log("Email sent: " + info.response);
         }
       });
-
-      //   const token = jwt.sign(
-      //     //permanent token
-      //     {
-      //       id: newUser.id,
-      //       first_name: newUser.first_name,
-      //       last_name: newUser.last_name,
-      //       email: newUser.email,
-      //       company: newUser.company_id,
-      //       role: newUser.role,
-      //     },
-      //     JWT_SECRET,
-      //     { expiresIn: "30d" }
-      //   );
-      //   res.cookie("token", token);
-
-      //   return res.json({
-      //     message: "Registration successful",
-      //     user: newUser,
-      //     token,
-      //   });
     } catch (error) {
       console.error("Error occurred during registration:", error);
       return res.status(500).json({ error: "Registration failed" });
@@ -173,21 +192,21 @@ const userController = {
       //     rejectUnauthorized: false
       //   }
       // });
-      
-    //   const transporter = nodemailer.createTransport({
-    //     service: 'Outlook365', 
-    //     host: 'smtp.office365.com',
-    //     port: 587,
-    //     secure: false,  // use STARTTLS
-    //     auth: {
-    //         user: process.env.EMAIL_USERNAME,
-    //         pass: process.env.EMAIL_PASSWORD,
-    //     },
-    //     tls: {
-    //         ciphers: 'SSLv3'
-    //     }
-    // });
-    
+
+      //   const transporter = nodemailer.createTransport({
+      //     service: 'Outlook365',
+      //     host: 'smtp.office365.com',
+      //     port: 587,
+      //     secure: false,  // use STARTTLS
+      //     auth: {
+      //         user: process.env.EMAIL_USERNAME,
+      //         pass: process.env.EMAIL_PASSWORD,
+      //     },
+      //     tls: {
+      //         ciphers: 'SSLv3'
+      //     }
+      // });
+
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
@@ -212,9 +231,10 @@ const userController = {
   },
 
   verifyEmail: async (req, res) => {
+    console.log("HELLLLLLLOOOOOOOOOOOO")
     try {
       const verificationToken = req.params.token;
-
+      console.log(verificationToken)
       // Decode the token
       const decodedToken = jwt.verify(
         verificationToken,
