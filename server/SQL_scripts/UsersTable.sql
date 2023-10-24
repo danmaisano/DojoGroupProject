@@ -7,9 +7,11 @@ CREATE TABLE IF NOT EXISTS
         company_id INTEGER REFERENCES "companies"(id),
         role VARCHAR(50) NOT NULL DEFAULT 'user',
         password VARCHAR(255) NOT NULL,
+        verified BOOLEAN NOT NULL DEFAULT FALSE,
         created_at TIMESTAMP,
         updated_at TIMESTAMP
     );
+
 
 INSERT INTO users (first_name, last_name, email, company_id, role, password, created_at, updated_at)
 VALUES 
