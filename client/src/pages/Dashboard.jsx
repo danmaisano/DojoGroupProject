@@ -7,13 +7,34 @@ import { LinkContainer } from "react-router-bootstrap";
 import NewOpportunityForm from "../components/NewOpp";
 import ContactModal from "../components/Contacts/ContactCard";
 import NewContactModal from "../components/Contacts/CreateContact";
+import Pagination from "../components/UI/Pagination";
 
 function Dashboard(props) {
   const { user, setUser } = props;
   const [opportunities, setOpportunities] = useState([]);
   const [editing, setEditing] = useState({});
   const navigate = useNavigate();
-  const token = Cookies.get("token");
+
+
+  //## START Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Define the number of items per page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const totalItems = opportunities.length;
+
+  const itemsToDisplay = opportunities.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleChangeItemsPerPage = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+  };
+  //## END Pagination
+
+
 
   // State for the contact modal
   const [showContactModal, setShowContactModal] = useState(false);
@@ -23,9 +44,7 @@ function Dashboard(props) {
 
   // Close the contact modal
   const closeContactModal = (modalId) => {
-    setContactModals((modals) =>
-      modals.filter((modal) => modal.key !== modalId)
-    );
+    setContactModals((modals) => modals.filter((modal) => modal.key !== modalId));
     setShowContactModal(false);
     window.location.reload();
   };
@@ -44,8 +63,7 @@ function Dashboard(props) {
     contactModalsRefs[modalId] = contactModal;
   };
 
-  const openCreateContactModal = (oppId) => {
-    // Receive oppId and selectedContact
+  const openCreateContactModal = (oppId) => {  // Receive oppId and selectedContact
     const modalId = Date.now(); // Generate a unique ID for the modal
     const contactModal = (
       <NewContactModal
@@ -57,14 +75,9 @@ function Dashboard(props) {
           window.location.reload(); // Refresh the page
 
           // Add contact ID to the opportunity represented by oppId
-          axios
-            .put(
-              `http://localhost:8081/opportunities/${oppId}`,
-              { contact_id: contactId },
-              {
-                withCredentials: true,
-              }
-            )
+          axios.put(`http://localhost:8081/opportunities/${oppId}`, { contact_id: contactId }, {
+            withCredentials: true
+          })
             .then(() => {
               // Update the state to reflect the changes
               setOpportunities((opportunities) => {
@@ -88,17 +101,13 @@ function Dashboard(props) {
     contactModalsRefs[modalId] = contactModal;
   };
 
+
   useEffect(() => {
     if (user && user.company) {
       // Use Promise.all to make both API calls in parallel
       Promise.all([
-        axios.get(
-          `http://localhost:8081/opportunities/company/${user.company}`,
-          { withCredentials: true }
-        ),
-        axios.get(`http://localhost:8081/contacts/company/${user.company}`, {
-          withCredentials: true,
-        }),
+        axios.get(`http://localhost:8081/opportunities/company/${user.company}`, { withCredentials: true }),
+        axios.get(`http://localhost:8081/contacts/company/${user.company}`, { withCredentials: true }),
       ])
         .then(([opportunitiesRes, contactsRes]) => {
           // Process the opportunities and contacts responses
@@ -161,7 +170,7 @@ function Dashboard(props) {
       }
     }
 
-    // const token = Cookies.get("token");
+    const token = Cookies.get("token");
 
     axios
       .put(
@@ -184,12 +193,12 @@ function Dashboard(props) {
           opps.map((opp) =>
             opp.id === id
               ? {
-                  ...opp,
-                  [field]: oppToUpdate[field],
-                  status: oppToUpdate.status,
-                  opportunity_win_date: oppToUpdate.opportunity_win_date,
-                  chance_of_winning: oppToUpdate.chance_of_winning,
-                }
+                ...opp,
+                [field]: oppToUpdate[field],
+                status: oppToUpdate.status,
+                opportunity_win_date: oppToUpdate.opportunity_win_date,
+                chance_of_winning: oppToUpdate.chance_of_winning,
+              }
               : opp
           )
         );
@@ -226,23 +235,42 @@ function Dashboard(props) {
   };
 
   return (
-    <div className="container card pb-3 pt-3">
-      <h1>Current Opportunities</h1>
+    <div className="container">
+      <h1>Opportunity Dashboard</h1>
+      <h2 className="my-3">Welcome {user.first_name}</h2>
+      <Button variant="success" onClick={handleShow}>
+        Create New Opportunity
+      </Button>
+      <Modal show={showModal} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Create a New Opportunity</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* Pass the callback to the form */}
+          <NewOpportunityForm user={user} afterSubmit={afterOpportunitySubmit} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <hr></hr>
+      <h4 className="my-3">Current Opportunities</h4>
       <div className="table-responsive">
-        <Table className="table" striped bordered hover variant="dark">
+        <table className="table mb-0">
           <thead>
             <tr>
-              <th className="text-center">Opportunity Name</th>
-              <th className="text-center">Prospect Name</th>
-              <th className="text-center">Potential Revenue</th>
-              <th className="text-center">Chance of Winning (%)</th>
-              <th className="text-center">Status</th>
-              <th className="text-center">Actions</th>
+              <th className="text-body text-center">Opportunity Name</th>
+              <th className="text-body text-center">Prospect Name</th>
+              <th className="text-body text-center">Potential Revenue</th>
+              <th className="text-body text-center">Chance of Winning (%)</th>
+              <th className="text-body text-center">Status</th>
+              <th className="text-body text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {opportunities.map((opp, index) => {
+            {itemsToDisplay.map((opp, index) => {
               // console.log("Opportunity object:", opp);
               return (
                 <tr key={opp.id}>
@@ -252,11 +280,7 @@ function Dashboard(props) {
                     "pot_rev",
                     "chance_of_winning",
                   ].map((field, i) => (
-                    <td
-                      key={i}
-                      onDoubleClick={() => handleDoubleClick(opp.id, field)}
-                      className="text-center"
-                    >
+                    <td key={i} onDoubleClick={() => handleDoubleClick(opp.id, field)} className="text-body text-center">
                       {editing.id === opp.id && editing.field === field ? (
                         <input
                           value={opp[field]}
@@ -268,22 +292,11 @@ function Dashboard(props) {
                       ) : field === "contact_id" ? (
                         opp.contact ? (
                           // Use an anchor tag to open the contact modal
-                          <a
-                            href="#"
-                            disabled={showContactModal}
-                            onClick={() => openContactModal(opp.contact)}
-                            className="text-center"
-                          >
+                          <a href="#" disabled={showContactModal} onClick={() => openContactModal(opp.contact)} className="text-center">
                             {`${opp.contact.first_name} ${opp.contact.last_name}`}
                           </a>
                         ) : (
-                          <a
-                            href="#"
-                            onClick={() => openCreateContactModal(opp.id)}
-                            className="text-center"
-                          >
-                            + Add Contact
-                          </a>
+                          <a href="#" onClick={() => openCreateContactModal(opp.id)} className="text-center">+ Add Contact</a>
                         )
                       ) : field === "pot_rev" ? (
                         `$${opp[field].toLocaleString()}`
@@ -301,14 +314,10 @@ function Dashboard(props) {
                         opp.status = e.target.value;
                         handleBlur(opp.id, "status");
                       }}
-                      id={`status-${opp.id}`}
-                      name={`status-${opp.id}`}
                     >
                       <option value="identified">Identified</option>
                       <option value="prospecting">Prospecting</option>
-                      <option value="meeting scheduled">
-                        Meeting Scheduled
-                      </option>
+                      <option value="meeting scheduled">Meeting Scheduled</option>
                       <option value="proposal sent">Proposal Sent</option>
                       <option value="agreement sent">Agreement Sent</option>
                       <option value="won">Won</option>
@@ -333,36 +342,17 @@ function Dashboard(props) {
               );
             })}
           </tbody>
-        </Table>
+        </table>
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          totalItems={opportunities.length}
+          currentPage={currentPage}
+          paginate={handlePageChange}
+          changeItemsPerPage={handleChangeItemsPerPage}
+        />
       </div>
-      <hr></hr>
-      <LinkContainer to="/newOpp">
-        <Nav.Link className="p-0">
-          <Button variant="primary" className="align-items-center">
-            <div className="d-flex align-items-center">
-              <span>Create Opportunity</span>
-            </div>
-          </Button>
-        </Nav.Link>
-      </LinkContainer>
-      <Modal show={showModal} onHide={handleClose} size="lg">
-        <Modal.Header closeButton></Modal.Header>
-        <Modal.Body>
-          {/* Pass the callback to the form */}
-          <NewOpportunityForm
-            user={user}
-            afterSubmit={afterOpportunitySubmit}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
       {contactModals}
     </div>
   );
-}
-
+};
 export default Dashboard;

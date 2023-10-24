@@ -12,6 +12,7 @@ import ContactCard from './components/Contacts/ContactCard'
 import ViewOpportunity from './pages/ViewOpportunity'
 import ContactsList from './components/Contacts/ContactsList'
 import SuperAdminDashboard from './pages/SuperAdminDashboard'
+import TestTable from './components/Contacts/testTable'
 
 function App() {
   const [user, setUser] = useState({});
@@ -40,7 +41,7 @@ function App() {
           <Route path="/contacts" element={<ContactsList user={user} setUser={setUser} />} />
           <Route path="/superAdminDashboard" element={<SuperAdminDashboard user={user} setUser={setUser} />} />
   
-          {/* <Route path="/test" element={<ContactCard user={user} setUser={setUser} />} /> */}
+          <Route path="/test" element={<TestTable user={user} setUser={setUser} />} />
         </Route>
       </Routes>
     </BrowserRouter>
