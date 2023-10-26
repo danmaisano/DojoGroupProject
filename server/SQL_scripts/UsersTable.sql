@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS
         company_id INTEGER REFERENCES "companies"(id),
         role VARCHAR(50) NOT NULL DEFAULT 'user',
         password VARCHAR(255) NOT NULL,
-        verified BOOLEAN NOT NULL DEFAULT FALSE,
+        status VARCHAR(50) NOT NULL DEFAULT 'registered',
+        invited BOOLEAN NOT NULL DEFAULT 'false',
         created_at TIMESTAMP,
         updated_at TIMESTAMP
     );

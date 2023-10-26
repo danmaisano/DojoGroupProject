@@ -58,13 +58,18 @@ User.init(
         len: [1, 100],
       },
     },
-    verified: {
-      type: DataTypes.BOOLEAN,
-      // allowNull: false,
-      defaultValue: false,
+    status: {
+      type: DataTypes.ENUM("registered", "verified", "active"),
+      allowNull: false,
+      defaultValue: "registered",
     },
+    invited: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    }
   },
-  
+
   {
     sequelize,
     modelName: "Users",
@@ -72,6 +77,5 @@ User.init(
     underscored: true,
   }
 );
-
 
 export default User;

@@ -90,14 +90,11 @@ const NewContactModal = (props) => {
             withCredentials: true
         })
             .then(res => {
-                console.log("Contact created: ", res.data.contact.id);
-                
                 if (afterSubmit) afterSubmit(res.data.contact.id);
                 handleSelectContact(res.data.contact.id); // add the contact id to the form data
                 const updatedOpportunities = [...opportunities];
                 setOpportunities((updatedOpportunities) => {
                     handleClose(); // Close the modal after successful submission
-                    // Update the opportunities
                     return updatedOpportunities;
             })
             .catch(err => console.log(err));

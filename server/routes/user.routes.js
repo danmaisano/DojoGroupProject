@@ -10,6 +10,8 @@ router.get("/", verifyUser, checkPermission('readOwn','company'), userController
 router.post("/register", userController.register);
 router.post("/createUser", verifyUser, checkPermission('createAny', 'user'), userController.createUser);
 router.post("/login", userController.login);
+router.put("/updatePassword/:token", userController.updatePassword);
+router.post("/forgotPassword", userController.forgotPassword);
 router.get("/logout", userController.logout);
 router.get("/:company_id", verifyUser, checkPermission('readOwn','company'), userController.getAllUsersByCompany);
 router.put("/update/:id", verifyUser, checkPermission('update','user'), userController.updateUser);

@@ -12,6 +12,8 @@ import ContactCard from './components/Contacts/ContactCard'
 import ViewOpportunity from './pages/ViewOpportunity'
 import ContactsList from './components/Contacts/ContactsList'
 import SuperAdminDashboard from './pages/SuperAdminDashboard'
+import PasswordUpdate from './components/PasswordUpdate'
+import ForgotPassword from './components/ForgotPassword'
 import TestTable from './components/Contacts/testTable'
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
         <Route path="/" element={<Home user={user} setUser={setUser} />} />
         <Route path="/register" element={<Register user={user} setUser={setUser} />} />
         <Route path="/login" element={<Login user={user} setUser={setUser} />} />
+        <Route path="/updatePassword" element={<PasswordUpdate user={user} setUser={setUser} />} />
+        <Route path="/forgotPassword" element={<ForgotPassword user={user} setUser={setUser} />} />
         
         {/* Layout wraps the routes below */}
         <Route element={<Layout user={user} setUser={setUser} />}>
