@@ -43,7 +43,6 @@ const Login = (props) => {
 
     if (!Object.values(newErrors).some(error => error)) {
       loginUser(formData.email, formData.password, setUser, navigate);
-      console.log("User object: ", user);
     }
   };
 
@@ -86,7 +85,7 @@ const Login = (props) => {
                 </Form.Floating>
 
                 <div className="d-flex align-items-center justify-content-between mt-4 mb-0">
-                  <a className="small" href="/forgot-password">Forgot Password?</a>
+                  <a className="small" href="/forgotPassword">Forgot Password?</a>
                   <Button variant="primary" type="submit">Login</Button>
                 </div>
               </Form>

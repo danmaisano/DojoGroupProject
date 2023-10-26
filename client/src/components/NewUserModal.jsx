@@ -50,19 +50,18 @@ const NewUserModal = (props) => {
     }
     
     setErrors(newErrors);
-  
+
     if (Object.keys(newErrors).length > 0) {
       console.log("errors", newErrors);
       return;
     }
+  
     formData.company_id = company.id;
+    
     axios.post('http://localhost:8081/users/createUser', formData, {withCredentials: true})
     .then(res => {
-      if (props.onNewUserAdded) {
-        props.onNewUserAdded(res.data.newUser); 
-      }
-      fetchUsers();
       handleClose();
+      fetchUsers();
     })
     .catch(err => console.log(err));
   
@@ -139,7 +138,7 @@ const NewUserModal = (props) => {
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
-        <Button variant="primary" type="submit" onClick={handleNewUser}>
+        <Button variant="primary" type="button" onClick={handleNewUser}>
           Add User
         </Button>
       </Modal.Footer>

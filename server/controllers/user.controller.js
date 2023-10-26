@@ -2,18 +2,13 @@ import User from "../models/user.js";
 import Company from "../models/company.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { OAuth2Client as GoogleOAuth2Client } from "google-auth-library";
 
 import fs from "fs";
 
-
-const credentials = JSON.parse(
-  fs.readFileSync(
-    "./credentials.json",
-    "utf8"
-  )
-);
+const credentials = JSON.parse(fs.readFileSync("./credentials.json", "utf8"));
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 const verificationToken = "your_verification_token_here";
@@ -48,8 +43,6 @@ const transporter = nodemailer.createTransport({
 });
 const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
-
-
 
 const userController = {
   getHome: (req, res) => {
@@ -93,22 +86,9 @@ const userController = {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-      // Check if company exists
-      let company = await Company.findOne({
-        where: {
-          company_name: req.body.company,
-        },
+      let company = await Company.create({
+        company_name: req.body.company,
       });
-
-      let role;
-      if (!company) {
-        company = await Company.create({
-          company_name: req.body.company,
-        });
-        role = "admin"; // Newly created company, so this user is an admin
-      } else {
-        role = "user"; // Company already exists, so this user is a member (or whatever default role you prefer)
-      }
 
       // Create a new user and associate it with the company
       const newUser = await User.create({
@@ -117,7 +97,9 @@ const userController = {
         email: req.body.email,
         password: hashedPassword,
         company_id: company.id,
-        role: role,
+        status: "registered",
+        role: "admin",
+        invited: false,
       });
 
       //Sending emails for verification
@@ -127,35 +109,6 @@ const userController = {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      // console.log("verification token:", verificationToken)
-
-      // Testing with gmail:
-      // const transporter = nodemailer.createTransport({
-      //   service: "gmail",
-      //   auth: {
-      //     type: "OAuth2",
-      //     user: "danmaisano@gmail.com",
-      //     clientId: client_id,
-      //     clientSecret: client_secret,
-      //     refreshToken: process.env.REFRESH_TOKEN,
-      //     accessToken: process.env.ACCESS_TOKEN,
-      //   },
-      // });
-
-      //For 365
-      //   const transporter = nodemailer.createTransport({
-      //     service: 'Outlook365',
-      //     host: 'smtp.office365.com',
-      //     port: 587,
-      //     secure: false,  // use STARTTLS
-      //     auth: {
-      //         user: process.env.EMAIL_USERNAME,
-      //         pass: process.env.EMAIL_PASSWORD,
-      //     },
-      //     tls: {
-      //         ciphers: 'SSLv3'
-      //     }
-      // });
 
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
@@ -168,7 +121,9 @@ const userController = {
         if (error) {
           console.log(error);
         } else {
-          console.log("Email sent: " + info.response);
+          return res
+            .status(201)
+            .json({ message: "User created and email verification link sent" });
         }
       });
     } catch (error) {
@@ -178,6 +133,12 @@ const userController = {
   },
 
   createUser: async (req, res) => {
+    const randomBytes = crypto.randomBytes(16).toString("hex");
+    const currentDateTime = new Date().toISOString();
+    const tempPassword = `${randomBytes}_${currentDateTime}`;
+    const saltRounds = 10;
+    const hashedTempPassword = await bcrypt.hash(tempPassword, saltRounds);
+
     try {
       const newUser = await User.create({
         first_name: req.body.first_name,
@@ -185,58 +146,33 @@ const userController = {
         email: req.body.email,
         company_id: req.body.company_id,
         role: req.body.role,
-        password: req.body.password,
+        status: "registered",
+        password: hashedTempPassword,
+        invited: true,
       });
       const verificationToken = jwt.sign(
         //email verification token only
         { userId: newUser.id, email: newUser.email },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "24h" }
       );
-      //Testing with gmail:
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          type: "OAuth2",
-          user: "danmaisano@gmail.com",
-          clientId: client_id,
-          clientSecret: client_secret,
-          refreshToken: process.env.REFRESH_TOKEN,
-          accessToken: process.env.ACCESS_TOKEN,
-        },
-      });
-
-      //   const transporter = nodemailer.createTransport({
-      //     service: 'Outlook365',
-      //     host: 'smtp.office365.com',
-      //     port: 587,
-      //     secure: false,  // use STARTTLS
-      //     auth: {
-      //         user: process.env.EMAIL_USERNAME,
-      //         pass: process.env.EMAIL_PASSWORD,
-      //     },
-      //     tls: {
-      //         ciphers: 'SSLv3'
-      //     }
-      // });
 
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: newUser.email,
         subject: "Verify your email",
-        text: `Click on the link to verify your email: http://localhost:8081/users/verify/${verificationToken}`,
+        html: `<p><a href="http://localhost:8081/users/verify/${verificationToken}">Click to verify your email, or some shit</a></p>`,
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log(error);
+          return res.status(500).json({ error: "Email sending failed" });
         } else {
-          console.log("Email sent: " + info.response);
+          return res
+            .status(201)
+            .json({ message: "User created and email verification link sent" });
         }
       });
-
-      // return res.json({
-      //   message: "Creation successful",
-      // });
     } catch (error) {
       console.error("Error occurred during registration:", error);
       return res.status(500).json({ error: "Registration failed" });
@@ -246,25 +182,38 @@ const userController = {
   verifyEmail: async (req, res) => {
     try {
       const verificationToken = req.params.token;
-      // Decode the token
+
+      // Step 2: Decode and verify the incoming token
       const decodedToken = jwt.verify(
         verificationToken,
         process.env.JWT_SECRET
       );
 
-      // The decoded token should contain the user's email or ID which you will use to find and update the user in the database
       const user = await User.findOne({ where: { email: decodedToken.email } });
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      // Update the user's status to verified or any other logic you want to execute upon verification
-      user.verified = true; // Assuming you have a 'verified' column in your User model
+      // Step 3: Update the user status and generate a new token for password update
+      user.status = "verified";
       await user.save();
 
-      // Redirect to the login page after successful verification and then return to end the function
-      return res.redirect("http://localhost:5173/login");
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" } // 1 hour expiry
+      );
+
+      // Step 4: Redirect to the updatePassword page with the new token
+      if (user.invited) {
+        return res.redirect(`http://localhost:5173/updatePassword?token=${token}`);
+
+      } else {
+        user.status = "active";
+        await user.save();
+        return res.redirect("http://localhost:5173/login");
+      }
     } catch (error) {
       if (
         error.name === "TokenExpiredError" ||
@@ -320,6 +269,84 @@ const userController = {
   logout: (req, res) => {
     res.clearCookie("token");
     return res.json({ Status: "Success" });
+  },
+
+  updatePassword: async (req, res) => {
+    try {
+      const { token, password, confirmPassword } = req.body;
+
+      // Verify the token.
+      let decodedToken;
+      try {
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+        return res.status(400).json({ Status: "Invalid or expired token" });
+      }
+
+      // Find the user with the email in the token
+      const user = await User.findOne({ where: { email: decodedToken.email } });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ Status: "Email or password is incorrect" });
+      }
+
+      if (password !== confirmPassword) {
+        return res
+          .status(400)
+          .json({ Status: "Password and Confirm Password must match" });
+      }
+
+      const saltRounds = 10; // Make sure to define saltRounds
+      const newPassword = await bcrypt.hash(password, saltRounds);
+      user.password = newPassword;
+      user.status = "active";
+      await user.save();
+
+      return res.status(200).json({ Status: "Password updated successfully" });
+    } catch (error) {
+      console.error("Error occurred during password update:", error);
+      return res.status(500).json({ Status: "Password update failed" });
+    }
+  },
+
+  forgotPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const token = crypto.randomBytes(32).toString("hex");
+      // Store this token securely in your database associated with the user's email
+
+      // Send email with the reset token
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: user.email,
+        subject: "Reset your password",
+        html: `<p><a href="http://localhost:5173/updatePassword/${token}">Click to reset your password</a></p>`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({ error: "Email sending failed" });
+        } else {
+          return res
+            .status(201)
+            .json({ message: "Email sent for password reset" });
+        }
+      });
+    } catch (error) {
+      console.error("Error occurred:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to initiate password reset" });
+    }
   },
 
   updateUser: async (req, res) => {
