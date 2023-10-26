@@ -21,43 +21,39 @@ function ContactsList(props) {
     const companyId = user.company;
     console.log(userId, companyId);
 
-    // Get User Contacts
-    const getUserContacts = async (userId) => {
-        try {
-            const response = await axios.get(`http://localhost:8081/contacts/user/own/${userId}`, {
-                withCredentials: true
-            });
-            setUserContacts(response.data);
-            console.log("User Contacts: ", response.data);
-        } catch (error) {
-            console.error('Error getting user contacts');
-        }
-    };
-
-    // Get Company Contacts
-    const getCompanyContacts = async (companyId) => {
-        try {
-            const response = await axios.get(`http://localhost:8081/contacts/company/${companyId}`, {
-                withCredentials: true
-            });
-            setCompanyContacts(response.data);
-            console.log("Company Contacts: ", response.data);
-        } catch (error) {
-            console.error('Error getting company contacts');
-        }
-    };
-
     useEffect(() => {
-        console.log("User ID: ", userId);
-        console.log("Company ID: ", companyId);
         // Check if user
-        if (user) {
+        if (user.id && user.company) {
+
+            // Get User Contacts
+            const getUserContacts = async (userId) => {
+                try {
+                    const response = await axios.get(`http://localhost:8081/contacts/user/own/${userId}`, {
+                        withCredentials: true
+                    });
+                    setUserContacts(response.data);
+                    console.log("User Contacts: ", response.data);
+                } catch (error) {
+                    console.error('Error getting user contacts');
+                }
+            };
+
+            // Get Company Contacts
+            const getCompanyContacts = async (companyId) => {
+                try {
+                    const response = await axios.get(`http://localhost:8081/contacts/company/${companyId}`, {
+                        withCredentials: true
+                    });
+                    setCompanyContacts(response.data);
+                    console.log("Company Contacts: ", response.data);
+                } catch (error) {
+                    console.error('Error getting company contacts');
+                };
+            };
+
             // Get contacts
-            getUserContacts(userId);
-            getCompanyContacts(companyId);
-        } else {
-            // Navigate to login page with react-router-dom
-            navigate('/login');
+            getUserContacts(user.id);
+            getCompanyContacts(user.company);
         }
     }, [user]);
 
